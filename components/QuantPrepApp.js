@@ -3896,7 +3896,6 @@ const QUESTIONS_DB = {
   ]
 };
 
-
 // Utility Functions
 const formatTime = (seconds) => {
   const mins = Math.floor(seconds / 60);
@@ -4097,6 +4096,9 @@ export default function QuantPrepApp() {
     const [score, setScore] = useState(0);
     const [timeSpent, setTimeSpent] = useState(0);
     const [selectedDifficulty, setSelectedDifficulty] = useState(null);
+    const [showDifficultySelection, setShowDifficultySelection] = useState(true);
+    const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+    const [audioUrl, setAudioUrl] = useState(null);
 
     useEffect(() => {
       let interval;
@@ -4108,21 +4110,81 @@ export default function QuantPrepApp() {
       return () => clearInterval(interval);
     }, [sessionStarted, showFeedback]);
 
-    const startSession = (difficulty = null) => {
+    const selectDifficulty = (difficulty) => {
+      setSelectedDifficulty(difficulty);
+      setShowDifficultySelection(false);
+    };
+
+    const startSession = () => {
       let questions = [...QUESTIONS_DB.questions];
       
-      // Filter by difficulty if specified
-      if (difficulty) {
-        questions = questions.filter(q => q.difficulty === difficulty);
+      // Filter by selected difficulty if one was chosen
+      if (selectedDifficulty) {
+        questions = questions.filter(q => q.difficulty === selectedDifficulty);
       }
       
-      const shuffled = questions.sort(() => Math.random() - 0.5).slice(0, 10);
+      // Check if we have enough questions
+      if (questions.length === 0) {
+        alert('No questions available for this difficulty level.');
+        return;
+      }
+      
+      // Randomly select 10 questions (or all if less than 10 available)
+      const numQuestions = Math.min(10, questions.length);
+      const shuffled = questions.sort(() => Math.random() - 0.5).slice(0, numQuestions);
+      
       setSessionQuestions(shuffled);
       setSessionStarted(true);
-      setSelectedDifficulty(difficulty);
       setCurrentQuestionIndex(0);
       setScore(0);
       setTimeSpent(0);
+    };
+
+    const generateVoiceExplanation = async (explanation, isCorrect) => {
+      try {
+        setIsPlayingAudio(true);
+        
+        // Generate a more conversational explanation
+        const voiceText = isCorrect 
+          ? `Great job! That's correct. ${explanation}`
+          : `Not quite right. Let me explain. ${explanation}`;
+        
+        const response = await fetch('https://api.elevenlabs.io/v1/text-to-speech/21m00Tcm4TlvDq8ikWAM', {
+          method: 'POST',
+          headers: {
+            'Accept': 'audio/mpeg',
+            'Content-Type': 'application/json',
+            'xi-api-key': process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY || ''
+          },
+          body: JSON.stringify({
+            text: voiceText,
+            model_id: 'eleven_monolingual_v1',
+            voice_settings: {
+              stability: 0.5,
+              similarity_boost: 0.75
+            }
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to generate audio');
+        }
+
+        const audioBlob = await response.blob();
+        const url = URL.createObjectURL(audioBlob);
+        setAudioUrl(url);
+        
+        const audio = new Audio(url);
+        audio.onended = () => {
+          setIsPlayingAudio(false);
+        };
+        audio.play();
+        
+      } catch (error) {
+        console.error('Error generating voice explanation:', error);
+        setIsPlayingAudio(false);
+        alert('Voice assistant is currently unavailable. Please check your API key.');
+      }
     };
 
     const submitAnswer = () => {
@@ -4139,8 +4201,10 @@ export default function QuantPrepApp() {
         setSelectedAnswer('');
         setShowFeedback(false);
         setIsCorrect(false);
+        setAudioUrl(null);
       } else {
         setSessionStarted(false);
+        setShowDifficultySelection(true);
         setUserProgress(prev => ({
           ...prev,
           totalSolved: prev.totalSolved + sessionQuestions.length,
@@ -4150,191 +4214,242 @@ export default function QuantPrepApp() {
       }
     };
 
-    if (!sessionStarted) {
+    // Difficulty Selection Screen
+    if (!sessionStarted && showDifficultySelection) {
       return (
         <div className="max-w-4xl mx-auto">
           <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10">
-            <h2 className="text-2xl font-bold text-white mb-6">Start Practice Session</h2>
+            <h2 className="text-2xl font-bold text-white mb-6">Choose Practice Difficulty</h2>
             
-            {/* Difficulty Selection */}
-            <div className="mb-8">
-              <h3 className="text-lg font-semibold text-white mb-4">Choose Difficulty</h3>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <button
-                  onClick={() => startSession(null)}
-                  className="p-4 rounded-lg border-2 border-white/20 bg-white/5 hover:border-white/40 hover:bg-white/10 transition-all group"
-                >
-                  <div className="text-lg font-bold text-white mb-2">Mixed</div>
-                  <div className="text-sm text-gray-400 mb-2">
-                    All difficulties
-                  </div>
-                  <div className="text-xs text-gray-500">
-                    {QUESTIONS_DB.questions.length} questions
-                  </div>
-                </button>
-                
-                {['Easy', 'Medium', 'Hard'].map(difficulty => {
-                  const count = QUESTIONS_DB.questions.filter(q => q.difficulty === difficulty).length;
-                  return (
-                    <button
-                      key={difficulty}
-                      onClick={() => startSession(difficulty)}
-                      className={`p-4 rounded-lg border-2 transition-all group ${
-                        difficulty === 'Easy' ? 'border-emerald-500/20 bg-emerald-500/5 hover:border-emerald-500/40 hover:bg-emerald-500/10' :
-                        difficulty === 'Medium' ? 'border-amber-500/20 bg-amber-500/5 hover:border-amber-500/40 hover:bg-amber-500/10' :
-                        'border-red-500/20 bg-red-500/5 hover:border-red-500/40 hover:bg-red-500/10'
-                      }`}
-                    >
-                      <div className="text-lg font-bold text-white mb-2">{difficulty}</div>
-                      <div className="text-sm text-gray-400 mb-2">
-                        {difficulty} questions only
-                      </div>
-                      <div className="text-xs text-gray-500">
-                        {count} questions
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+              <button
+                onClick={() => selectDifficulty(null)}
+                className={`p-6 rounded-lg border-2 transition-all group ${
+                  selectedDifficulty === null
+                    ? 'border-white bg-white/10'
+                    : 'border-white/20 bg-white/5 hover:border-white/40 hover:bg-white/10'
+                }`}
+              >
+                <div className="text-lg font-bold text-white mb-2">Mixed</div>
+                <div className="text-sm text-gray-400 mb-2">All difficulties</div>
+                <div className="text-xs text-gray-500">
+                  {Math.min(10, QUESTIONS_DB.questions.length)} questions
+                </div>
+              </button>
+              
+              {['Easy', 'Medium', 'Hard'].map(difficulty => {
+                const count = QUESTIONS_DB.questions.filter(q => q.difficulty === difficulty).length;
+                const sessionSize = Math.min(10, count);
+                return (
+                  <button
+                    key={difficulty}
+                    onClick={() => selectDifficulty(difficulty)}
+                    className={`p-6 rounded-lg border-2 transition-all group ${
+                      selectedDifficulty === difficulty
+                        ? difficulty === 'Easy' ? 'border-emerald-500 bg-emerald-500/10' :
+                          difficulty === 'Medium' ? 'border-amber-500 bg-amber-500/10' :
+                          'border-red-500 bg-red-500/10'
+                        : difficulty === 'Easy' ? 'border-emerald-500/20 bg-emerald-500/5 hover:border-emerald-500/40 hover:bg-emerald-500/10' :
+                          difficulty === 'Medium' ? 'border-amber-500/20 bg-amber-500/5 hover:border-amber-500/40 hover:bg-amber-500/10' :
+                          'border-red-500/20 bg-red-500/5 hover:border-red-500/40 hover:bg-red-500/10'
+                    }`}
+                  >
+                    <div className="text-lg font-bold text-white mb-2">{difficulty}</div>
+                    <div className="text-sm text-gray-400 mb-2">
+                      {difficulty} questions only
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      {sessionSize} questions from {count} available
+                    </div>
+                  </button>
+                );
+              })}
             </div>
 
-            {/* Session Info */}
-            <div className="space-y-4">
+            <div className="space-y-4 mb-6">
               <div className="p-4 bg-blue-500/10 rounded-lg border border-blue-500/20">
                 <div className="font-medium text-white mb-1">📝 10 Questions per Session</div>
                 <div className="text-sm text-gray-400">Randomly selected from your chosen difficulty</div>
               </div>
               <div className="p-4 bg-emerald-500/10 rounded-lg border border-emerald-500/20">
-                <div className="font-medium text-white mb-1">⚡ Instant Feedback</div>
-                <div className="text-sm text-gray-400">Learn from detailed explanations after each question</div>
+                <div className="font-medium text-white mb-1">🎙️ AI Voice Assistant</div>
+                <div className="text-sm text-gray-400">Get spoken explanations for each answer</div>
               </div>
               <div className="p-4 bg-purple-500/10 rounded-lg border border-purple-500/20">
                 <div className="font-medium text-white mb-1">⏱️ Track Your Time</div>
                 <div className="text-sm text-gray-400">Build speed and confidence with timed practice</div>
               </div>
             </div>
+
+            <button
+              onClick={startSession}
+              disabled={selectedDifficulty === undefined}
+              className="w-full bg-white text-black py-4 rounded-lg font-bold hover:bg-gray-100 transition-all flex items-center justify-center gap-2 disabled:bg-white/20 disabled:text-gray-500 disabled:cursor-not-allowed"
+            >
+              <Play className="w-5 h-5" />
+              Begin Practice Session
+            </button>
           </div>
         </div>
       );
     }
 
-    const currentQuestion = sessionQuestions[currentQuestionIndex];
+    // Question Display
+    if (sessionStarted) {
+      const currentQuestion = sessionQuestions[currentQuestionIndex];
 
-    return (
-      <div className="max-w-3xl mx-auto">
-        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10">
-          {/* Header with session info */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="text-sm text-gray-400">
-                Question {currentQuestionIndex + 1} of {sessionQuestions.length}
-              </div>
-              {selectedDifficulty && (
-                <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getDifficultyColor(selectedDifficulty)}`}>
-                  {selectedDifficulty} Mode
-                </span>
-              )}
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="text-sm font-medium text-white">
-                Score: {score}/{currentQuestionIndex + (showFeedback ? 1 : 0)}
-              </div>
-              <div className="flex items-center gap-2 text-white bg-white/10 px-3 py-1 rounded-full">
-                <Clock className="w-4 h-4" />
-                <span className="font-mono">{formatTime(timeSpent)}</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="mb-6">
-            <div className="flex items-center gap-2 mb-4">
-              <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getDifficultyColor(currentQuestion.difficulty)}`}>
-                {currentQuestion.difficulty}
-              </span>
-              <span className="px-3 py-1 rounded-full text-sm font-medium bg-white/5 text-gray-300 border border-white/10">
-                {getCategoryIcon(currentQuestion.category)} {currentQuestion.category}
-              </span>
-            </div>
-            <h3 className="text-xl font-bold text-white mb-4 leading-relaxed">{currentQuestion.question}</h3>
-          </div>
-
-          {!showFeedback ? (
-            <div className="space-y-4">
-              {currentQuestion.type === 'multiple_choice' ? (
-                <div className="space-y-2">
-                  {currentQuestion.options.map((option, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setSelectedAnswer(option)}
-                      className={`w-full p-4 text-left rounded-lg border-2 transition-all ${
-                        selectedAnswer === option
-                          ? 'border-white bg-white/10 text-white'
-                          : 'border-white/10 text-gray-300 hover:border-white/30 hover:bg-white/5'
-                      }`}
-                    >
-                      {option}
-                    </button>
-                  ))}
+      return (
+        <div className="max-w-3xl mx-auto">
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="text-sm text-gray-400">
+                  Question {currentQuestionIndex + 1} of {sessionQuestions.length}
                 </div>
-              ) : (
-                <input
-                  type="text"
-                  value={selectedAnswer}
-                  onChange={(e) => setSelectedAnswer(e.target.value)}
-                  placeholder="Enter your answer..."
-                  className="w-full p-4 bg-white/5 border-2 border-white/10 rounded-lg focus:border-white focus:outline-none text-white placeholder-gray-500"
-                />
-              )}
-              <button
-                onClick={submitAnswer}
-                disabled={!selectedAnswer}
-                className="w-full bg-white text-black py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors disabled:bg-white/10 disabled:text-gray-500 disabled:cursor-not-allowed"
-              >
-                Submit Answer
-              </button>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              <div className={`p-4 rounded-lg border-2 ${isCorrect ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-red-500/10 border-red-500/30'}`}>
-                <div className="flex items-center gap-2 mb-2">
-                  {isCorrect ? (
-                    <Check className="w-5 h-5 text-emerald-400" />
-                  ) : (
-                    <AlertCircle className="w-5 h-5 text-red-400" />
-                  )}
-                  <span className={`font-bold ${isCorrect ? 'text-emerald-400' : 'text-red-400'}`}>
-                    {isCorrect ? 'Correct!' : 'Incorrect'}
+                {selectedDifficulty && (
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getDifficultyColor(selectedDifficulty)}`}>
+                    {selectedDifficulty} Mode
                   </span>
+                )}
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="text-sm font-medium text-white">
+                  Score: {score}/{currentQuestionIndex + (showFeedback ? 1 : 0)}
                 </div>
-                {!isCorrect && (
-                  <div className="text-sm text-gray-300 mb-2">
-                    <strong>Your answer:</strong> {selectedAnswer}
-                    <br />
-                    <strong>Correct answer:</strong> {currentQuestion.correct_answer}
-                  </div>
-                )}
+                <div className="flex items-center gap-2 text-white bg-white/10 px-3 py-1 rounded-full">
+                  <Clock className="w-4 h-4" />
+                  <span className="font-mono">{formatTime(timeSpent)}</span>
+                </div>
               </div>
-              
-              <div className="p-4 bg-blue-500/10 rounded-lg border border-blue-500/20">
-                <div className="font-bold text-white mb-2">💡 Explanation</div>
-                <div className="text-gray-300">{currentQuestion.explanation}</div>
-              </div>
-
-              <button
-                onClick={nextQuestion}
-                className="w-full bg-white text-black py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
-              >
-                {currentQuestionIndex < sessionQuestions.length - 1 ? (
-                  <>Next Question <ChevronRight className="w-5 h-5" /></>
-                ) : (
-                  <>Finish Session <Check className="w-5 h-5" /></>
-                )}
-              </button>
             </div>
-          )}
+
+            <div className="mb-6">
+              <div className="flex items-center gap-2 mb-4">
+                <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getDifficultyColor(currentQuestion.difficulty)}`}>
+                  {currentQuestion.difficulty}
+                </span>
+                <span className="px-3 py-1 rounded-full text-sm font-medium bg-white/5 text-gray-300 border border-white/10">
+                  {getCategoryIcon(currentQuestion.category)} {currentQuestion.category}
+                </span>
+              </div>
+              <h3 className="text-xl font-bold text-white mb-4 leading-relaxed">{currentQuestion.question}</h3>
+            </div>
+
+            {!showFeedback ? (
+              <div className="space-y-4">
+                {currentQuestion.type === 'multiple_choice' ? (
+                  <div className="space-y-2">
+                    {currentQuestion.options.map((option, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setSelectedAnswer(option)}
+                        className={`w-full p-4 text-left rounded-lg border-2 transition-all ${
+                          selectedAnswer === option
+                            ? 'border-white bg-white/10 text-white'
+                            : 'border-white/10 text-gray-300 hover:border-white/30 hover:bg-white/5'
+                        }`}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <input
+                    type="text"
+                    value={selectedAnswer}
+                    onChange={(e) => setSelectedAnswer(e.target.value)}
+                    placeholder="Enter your answer..."
+                    className="w-full p-4 bg-white/5 border-2 border-white/10 rounded-lg focus:border-white focus:outline-none text-white placeholder-gray-500"
+                  />
+                )}
+                <button
+                  onClick={submitAnswer}
+                  disabled={!selectedAnswer}
+                  className="w-full bg-white text-black py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors disabled:bg-white/10 disabled:text-gray-500 disabled:cursor-not-allowed"
+                >
+                  Submit Answer
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className={`p-4 rounded-lg border-2 ${isCorrect ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-red-500/10 border-red-500/30'}`}>
+                  <div className="flex items-center gap-2 mb-2">
+                    {isCorrect ? (
+                      <Check className="w-5 h-5 text-emerald-400" />
+                    ) : (
+                      <AlertCircle className="w-5 h-5 text-red-400" />
+                    )}
+                    <span className={`font-bold ${isCorrect ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {isCorrect ? 'Correct!' : 'Incorrect'}
+                    </span>
+                  </div>
+                  {!isCorrect && (
+                    <div className="text-sm text-gray-300 mb-2">
+                      <strong>Your answer:</strong> {selectedAnswer}
+                      <br />
+                      <strong>Correct answer:</strong> {currentQuestion.correct_answer}
+                    </div>
+                  )}
+                </div>
+                
+                <div className="p-4 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                  <div className="font-bold text-white mb-2">💡 Explanation</div>
+                  <div className="text-gray-300">{currentQuestion.explanation}</div>
+                </div>
+
+                {/* AI Voice Assistant */}
+                <div className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-lg border border-purple-500/20 p-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center relative">
+                      <div className={`absolute inset-0 rounded-full ${isPlayingAudio ? 'animate-pulse bg-purple-500/30' : ''}`}></div>
+                      <span className="text-2xl relative z-10">🎙️</span>
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-bold text-white mb-1">AI Voice Assistant</div>
+                      <div className="text-sm text-gray-400">
+                        {isPlayingAudio ? 'Playing explanation...' : 'Click to hear an audio explanation'}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => generateVoiceExplanation(currentQuestion.explanation, isCorrect)}
+                      disabled={isPlayingAudio}
+                      className="px-4 py-2 bg-white text-black rounded-lg font-medium hover:bg-gray-100 transition-all disabled:bg-white/20 disabled:text-gray-500 disabled:cursor-not-allowed flex items-center gap-2"
+                    >
+                      {isPlayingAudio ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+                          Playing
+                        </>
+                      ) : (
+                        <>
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" />
+                          </svg>
+                          Explain
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  onClick={nextQuestion}
+                  className="w-full bg-white text-black py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
+                >
+                  {currentQuestionIndex < sessionQuestions.length - 1 ? (
+                    <>Next Question <ChevronRight className="w-5 h-5" /></>
+                  ) : (
+                    <>Finish Session <Check className="w-5 h-5" /></>
+                  )}
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
+
+    return null;
   };
 
   const Topics = () => {
