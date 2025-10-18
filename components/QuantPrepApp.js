@@ -3528,7 +3528,7 @@ const evaluateAnswer = async (userAnswer, correctAnswer, question) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY || "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"}`
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
         model: "gpt-4o",
