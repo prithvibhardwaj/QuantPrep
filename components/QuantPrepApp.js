@@ -3821,7 +3821,7 @@ export default function QuantPrepApp() {
     const [score, setScore] = useState(0);
     const [timeSpent, setTimeSpent] = useState(0);
     const [selectedDifficulty, setSelectedDifficulty] = useState(null);
-    const [showDifficultySelection, setShowDifficultySelection] = useState(false);
+    const [showDifficultySelection, setShowDifficultySelection] = useState(true); // Changed from false to true
     const [isPlayingAudio, setIsPlayingAudio] = useState(false);
     const [audioUrl, setAudioUrl] = useState(null);
     const [isEvaluating, setIsEvaluating] = useState(false);
@@ -3839,7 +3839,6 @@ export default function QuantPrepApp() {
 
     const selectDifficulty = (difficulty) => {
       setSelectedDifficulty(difficulty);
-      setShowDifficultySelection(false);
     };
 
     const startSession = () => {
@@ -3859,10 +3858,12 @@ export default function QuantPrepApp() {
       
       setSessionQuestions(shuffled);
       setSessionStarted(true);
+      setShowDifficultySelection(false); // Hide difficulty selection when starting
       setCurrentQuestionIndex(0);
       setScore(0);
       setTimeSpent(0);
     };
+  
 
     const generateVoiceExplanation = async (explanation, isCorrect) => {
       try {
@@ -4044,7 +4045,7 @@ export default function QuantPrepApp() {
                 );
               })}
             </div>
-
+  
             <div className="space-y-4 mb-6">
               <div className="p-4 bg-purple-500/10 rounded-lg border border-purple-500/20">
                 <div className="flex items-center gap-3 mb-2">
@@ -4068,7 +4069,7 @@ export default function QuantPrepApp() {
                 <div className="text-sm text-gray-400">Build speed and confidence with timed practice</div>
               </div>
             </div>
-
+  
             <button
               onClick={startSession}
               disabled={selectedDifficulty === undefined}
