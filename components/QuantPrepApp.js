@@ -3520,15 +3520,13 @@ const getCategoryIcon = (category) => {
 };
 
 // OpenAI Answer Evaluator
-// OpenAI Answer Evaluator - UPDATED VERSION
-// OpenAI Answer Evaluator - UPDATED FOR LANGUAGE ANSWERS
 const evaluateAnswer = async (userAnswer, correctAnswer, question) => {
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`
+        "Authorization": `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY || ''}`
       },
       body: JSON.stringify({
         model: "gpt-4o",
