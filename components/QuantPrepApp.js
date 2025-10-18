@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Brain, Flame, BarChart3, BookOpen, Target, Menu, X, Clock, TrendingUp, ChevronRight, Play, ArrowRight, Check, AlertCircle, Zap } from 'lucide-react';
+import { Brain, Flame, BarChart3, BookOpen, Target, Menu, X, Clock, TrendingUp, ChevronRight, Play, ArrowRight, Check, AlertCircle, Zap, Loader2, Sparkles } from 'lucide-react';
 
 // REPLACE THIS ENTIRE SECTION WITH YOUR CONVERTED DATABASE
 
@@ -16,16 +16,10 @@ const QUESTIONS_DB = {
         "concentration",
         "mixture"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "The final concentrations are identical",
       "explanation": "The final concentrations are identical. No calculation needed - think about volume conservation.",
-      "estimated_time": 120,
-      "options": [
-        "Never true",
-        "The final concentrations are identical",
-        "Insufficient information provided",
-        "Always true in all cases"
-      ]
+      "estimated_time": 120
     },
     {
       "id": "Q1.2",
@@ -38,16 +32,10 @@ const QUESTIONS_DB = {
         "series",
         "summation"
       ],
-      "type": "multiple_choice",
-      "correct_answer": "5050",
-      "explanation": "5,050. General formula: n(n+1)/2",
-      "estimated_time": 60,
-      "options": [
-        "5050",
-        "6312",
-        "3787",
-        "7575"
-      ]
+      "type": "numerical",
+      "correct_answer": "5,050 for the first part",
+      "explanation": "5,050 for the first part. General formula: n(n+1)/2",
+      "estimated_time": 120
     },
     {
       "id": "Q1.3",
@@ -60,16 +48,10 @@ const QUESTIONS_DB = {
         "weighing",
         "problem-solving"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 180,
-      "options": [
-        "They are equal",
-        "Never true",
-        "Yes, always possible",
-        "Answer not provided"
-      ]
+      "estimated_time": 180
     },
     {
       "id": "Q1.4",
@@ -82,16 +64,10 @@ const QUESTIONS_DB = {
         "optimization",
         "shortest-path"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Unfold the cube and find the straight-line distance",
-      "explanation": "Unfold the cube and find the straight-line distance. Answer: √5 units.",
-      "estimated_time": 120,
-      "options": [
-        "Unfold the cube and find the straight-line distance",
-        "Cannot be determined without additional information",
-        "They are equal",
-        "Depends on market conditions"
-      ]
+      "explanation": "Unfold the cube and find the straight-line distance. Answer: \u221a5 units.",
+      "estimated_time": 240
     },
     {
       "id": "Q1.5",
@@ -105,14 +81,14 @@ const QUESTIONS_DB = {
         "volume"
       ],
       "type": "multiple_choice",
-      "correct_answer": "Calculate 10³ - 8³ = 1000 - 512 = 488",
-      "explanation": "Calculate 10³ - 8³ = 1000 - 512 = 488",
-      "estimated_time": 90,
+      "correct_answer": "Calculate 10\u00b3 - 8\u00b3 = 1000 - 512 = 488",
+      "explanation": "Calculate 10\u00b3 - 8\u00b3 = 1000 - 512 = 488",
+      "estimated_time": 120,
       "options": [
-        "Depends on market conditions",
-        "Calculate 10³ - 8³ = 1000 - 512 = 488",
-        "Cannot be determined without additional information",
-        "Always true in all cases"
+        "It's impossible to determine",
+        "Insufficient information provided",
+        "Never true",
+        "Calculate 10\u00b3 - 8\u00b3 = 1000 - 512 = 488"
       ]
     },
     {
@@ -126,10 +102,16 @@ const QUESTIONS_DB = {
         "expected-value",
         "population"
       ],
-      "type": "numerical",
+      "type": "multiple_choice",
       "correct_answer": "50% - the proportion remains equal despite the stopping rule",
       "explanation": "50% - the proportion remains equal despite the stopping rule.",
-      "estimated_time": 90
+      "estimated_time": 90,
+      "options": [
+        "37",
+        "62",
+        "50% - the proportion remains equal despite the stopping rule",
+        "75"
+      ]
     },
     {
       "id": "Q1.7",
@@ -142,10 +124,16 @@ const QUESTIONS_DB = {
         "clock",
         "angles"
       ],
-      "type": "numerical",
+      "type": "multiple_choice",
       "correct_answer": "7",
       "explanation": "7.5 degrees",
-      "estimated_time": 90
+      "estimated_time": 120,
+      "options": [
+        "5.6",
+        "7",
+        "9.1",
+        "11.2"
+      ]
     },
     {
       "id": "Q1.8",
@@ -158,10 +146,16 @@ const QUESTIONS_DB = {
         "clock",
         "algebra"
       ],
-      "type": "numerical",
+      "type": "multiple_choice",
       "correct_answer": "3:16:21",
       "explanation": "3:16:21.82 (approximately 3:16 and 21.82 seconds)",
-      "estimated_time": 180
+      "estimated_time": 240,
+      "options": [
+        "3:16:21",
+        "Not applicable",
+        "Cannot determine",
+        "Insufficient information"
+      ]
     },
     {
       "id": "Q1.9",
@@ -174,16 +168,10 @@ const QUESTIONS_DB = {
         "factors",
         "divisibility"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "ON",
       "explanation": "ON. Bulb 64 is touched by people whose numbers are factors of 64: 1,2,4,8,16,32,64 (odd number of factors).",
-      "estimated_time": 240,
-      "options": [
-        "Insufficient information provided",
-        "ON",
-        "Never true",
-        "Cannot be determined without additional information"
-      ]
+      "estimated_time": 180
     },
     {
       "id": "Q1.10",
@@ -196,16 +184,10 @@ const QUESTIONS_DB = {
         "factors",
         "perfect-squares"
       ],
-      "type": "multiple_choice",
+      "type": "numerical",
       "correct_answer": "10 bulbs are illuminated: the perfect squares (1,4,9,16,25,36,49,64,81,100)",
       "explanation": "10 bulbs are illuminated: the perfect squares (1,4,9,16,25,36,49,64,81,100)",
-      "estimated_time": 120,
-      "options": [
-        "8.0",
-        "10 bulbs are illuminated: the perfect squares (1,4,9,16,25,36,49,64,81,100)",
-        "16.0",
-        "13.0"
-      ]
+      "estimated_time": 120
     },
     {
       "id": "Q1.11",
@@ -218,16 +200,10 @@ const QUESTIONS_DB = {
         "pigeonhole-principle",
         "probability"
       ],
-      "type": "multiple_choice",
+      "type": "numerical",
       "correct_answer": "3 socks",
       "explanation": "3 socks",
-      "estimated_time": 120,
-      "options": [
-        "3 socks",
-        "3.9",
-        "4.8",
-        "2.4"
-      ]
+      "estimated_time": 60
     },
     {
       "id": "Q1.12",
@@ -240,16 +216,10 @@ const QUESTIONS_DB = {
         "strategy",
         "backward-induction"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Go first and call 6, then maintain calling numbers that keep you 11 ahead of opponent",
       "explanation": "Go first and call 6, then maintain calling numbers that keep you 11 ahead of opponent.",
-      "estimated_time": 180,
-      "options": [
-        "Never true",
-        "Go first and call 6, then maintain calling numbers that keep you 11 ahead of opponent",
-        "Cannot be determined without additional information",
-        "Insufficient information provided"
-      ]
+      "estimated_time": 120
     },
     {
       "id": "Q1.13",
@@ -261,16 +231,10 @@ const QUESTIONS_DB = {
         "combinatorics",
         "optimization"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "About 200 trials if exploiting mechanical tolerances; 1,600 if only finding first two numbers exactly",
       "explanation": "About 200 trials if exploiting mechanical tolerances; 1,600 if only finding first two numbers exactly.",
-      "estimated_time": 120,
-      "options": [
-        "No direct relationship",
-        "About 200 trials if exploiting mechanical tolerances; 1,600 if only finding first two numbers exactly",
-        "None of the above",
-        "Always true in all cases"
-      ]
+      "estimated_time": 180
     },
     {
       "id": "Q1.14",
@@ -284,16 +248,10 @@ const QUESTIONS_DB = {
         "optimization",
         "algorithm"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Maximum cost $500 (5 weighings)",
       "explanation": "Maximum cost $500 (5 weighings). Divide into groups of 3^n pattern.",
-      "estimated_time": 360,
-      "options": [
-        "Maximum cost $500 (5 weighings)",
-        "Not applicable",
-        "Cannot determine",
-        "Insufficient information"
-      ]
+      "estimated_time": 240
     },
     {
       "id": "Q1.15",
@@ -306,16 +264,10 @@ const QUESTIONS_DB = {
         "proof",
         "mathematics"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 240,
-      "options": [
-        "It's impossible to determine",
-        "They are equal",
-        "Yes, always possible",
-        "Answer not provided"
-      ]
+      "estimated_time": 300
     },
     {
       "id": "Q1.16",
@@ -327,10 +279,10 @@ const QUESTIONS_DB = {
         "exponential-growth",
         "logic"
       ],
-      "type": "numerical",
+      "type": "free_response",
       "correct_answer": "27 days",
-      "explanation": "27 days. Eight lily pads = one lily pad that's 3 days old (2³=8).",
-      "estimated_time": 120
+      "explanation": "27 days. Eight lily pads = one lily pad that's 3 days old (2\u00b3=8).",
+      "estimated_time": 90
     },
     {
       "id": "Q1.17",
@@ -344,8 +296,8 @@ const QUESTIONS_DB = {
       ],
       "type": "numerical",
       "correct_answer": "About 8 days",
-      "explanation": "About 8 days. Solve 6000/27 = 2^N, so N ≈ 7.8",
-      "estimated_time": 60
+      "explanation": "About 8 days. Solve 6000/27 = 2^N, so N \u2248 7.8",
+      "estimated_time": 90
     },
     {
       "id": "Q1.18",
@@ -357,16 +309,10 @@ const QUESTIONS_DB = {
         "fractions",
         "arithmetic"
       ],
-      "type": "multiple_choice",
+      "type": "numerical",
       "correct_answer": "0",
       "explanation": "0.8125",
-      "estimated_time": 90,
-      "options": [
-        "0.0",
-        "0.0",
-        "0.0",
-        "0"
-      ]
+      "estimated_time": 90
     },
     {
       "id": "Q1.19",
@@ -378,16 +324,10 @@ const QUESTIONS_DB = {
         "logic",
         "sequences"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "During the 5th day, 2/3 through the day (starts day 5 at 8 feet, reaches 10 feet at 2/3 through day 5)",
       "explanation": "During the 5th day, 2/3 through the day (starts day 5 at 8 feet, reaches 10 feet at 2/3 through day 5).",
-      "estimated_time": 60,
-      "options": [
-        "Sometimes true, sometimes false",
-        "During the 5th day, 2/3 through the day (starts day 5 at 8 feet, reaches 10 feet at 2/3 through day 5)",
-        "Cannot be determined without additional information",
-        "Never true"
-      ]
+      "estimated_time": 120
     },
     {
       "id": "Q1.20",
@@ -399,16 +339,10 @@ const QUESTIONS_DB = {
         "logic",
         "lateral-thinking"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Turn switch 1 on, wait, turn it off and simultaneously turn switch 2 on",
       "explanation": "Turn switch 1 on, wait, turn it off and simultaneously turn switch 2 on. Enter room: illuminated=switch 2, warm unlit=switch 1, cold unlit=switch 3.",
-      "estimated_time": 120,
-      "options": [
-        "Turn switch 1 on, wait, turn it off and simultaneously turn switch 2 on",
-        "Insufficient information provided",
-        "Cannot be determined without additional information",
-        "Never true"
-      ]
+      "estimated_time": 120
     },
     {
       "id": "Q1.21",
@@ -421,16 +355,10 @@ const QUESTIONS_DB = {
         "deduction",
         "puzzle"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Blue",
       "explanation": "Blue. If first two men saw two red hats, they'd know their own. Since they didn't, blind man deduces he's wearing blue.",
-      "estimated_time": 180,
-      "options": [
-        "It's impossible to determine",
-        "Blue",
-        "Always true in all cases",
-        "Insufficient information provided"
-      ]
+      "estimated_time": 120
     },
     {
       "id": "Q1.22",
@@ -443,16 +371,10 @@ const QUESTIONS_DB = {
         "modular-arithmetic",
         "LCM"
       ],
-      "type": "multiple_choice",
+      "type": "numerical",
       "correct_answer": "2519",
       "explanation": "2519. This is LCM(2,3,4,5,6,7,8,9,10) - 1 = 2520 - 1.",
-      "estimated_time": 240,
-      "options": [
-        "3778",
-        "3148",
-        "1889",
-        "2519"
-      ]
+      "estimated_time": 180
     },
     {
       "id": "Q1.23",
@@ -464,10 +386,16 @@ const QUESTIONS_DB = {
         "kinematics",
         "distance-speed-time"
       ],
-      "type": "numerical",
+      "type": "multiple_choice",
       "correct_answer": "20 miles",
-      "explanation": "20 miles. They meet after 0.5 hours (25/(20+30)). Fly travels 40×0.5 = 20 miles.",
-      "estimated_time": 120
+      "explanation": "20 miles. They meet after 0.5 hours (25/(20+30)). Fly travels 40\u00d70.5 = 20 miles.",
+      "estimated_time": 90,
+      "options": [
+        "30",
+        "20 miles",
+        "25",
+        "15"
+      ]
     },
     {
       "id": "Q1.24",
@@ -480,16 +408,10 @@ const QUESTIONS_DB = {
         "constraints",
         "puzzle"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "E=5 immediately",
       "explanation": "E=5 immediately. Multiple solutions exist (96 total). Example: 6,8,4,2,5,1,3,9,7",
-      "estimated_time": 240,
-      "options": [
-        "Never true",
-        "E=5 immediately",
-        "They are equal",
-        "Sometimes true, sometimes false"
-      ]
+      "estimated_time": 240
     },
     {
       "id": "Q1.25",
@@ -505,12 +427,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Water level falls",
       "explanation": "Water level falls. Rock in boat displaces its weight in water; rock underwater displaces only its volume.",
-      "estimated_time": 90,
+      "estimated_time": 120,
       "options": [
-        "It's impossible to determine",
-        "Depends on market conditions",
         "Water level falls",
-        "They are equal"
+        "None of the above",
+        "They are equal",
+        "Never true"
       ]
     },
     {
@@ -518,22 +440,16 @@ const QUESTIONS_DB = {
       "chapter": 1,
       "category": "Purely Quantitative & Logic",
       "difficulty": "Hard",
-      "question": "Prove that the area of a triangle is given by A = √[s(s-a)(s-b)(s-c)], where a, b, and c are the side lengths, and s = (a+b+c)/2 is half the perimeter. (Heron's Formula)",
+      "question": "Prove that the area of a triangle is given by A = \u221a[s(s-a)(s-b)(s-c)], where a, b, and c are the side lengths, and s = (a+b+c)/2 is half the perimeter. (Heron's Formula)",
       "tags": [
         "geometry",
         "proof",
         "trigonometry"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 300,
-      "options": [
-        "They are equal",
-        "Answer not provided",
-        "Yes, always possible",
-        "Always true in all cases"
-      ]
+      "estimated_time": 300
     },
     {
       "id": "Q1.27",
@@ -547,14 +463,14 @@ const QUESTIONS_DB = {
         "inclusion-exclusion"
       ],
       "type": "multiple_choice",
-      "correct_answer": "Approaches 1 - 1/e ≈ 0",
-      "explanation": "Approaches 1 - 1/e ≈ 0.632 as N gets large.",
-      "estimated_time": 120,
+      "correct_answer": "Approaches 1 - 1/e \u2248 0",
+      "explanation": "Approaches 1 - 1/e \u2248 0.632 as N gets large.",
+      "estimated_time": 180,
       "options": [
-        "Sometimes true, sometimes false",
-        "Approaches 1 - 1/e ≈ 0",
+        "Never true",
         "Cannot be determined without additional information",
-        "Always true in all cases"
+        "Approaches 1 - 1/e \u2248 0",
+        "Insufficient information provided"
       ]
     },
     {
@@ -568,16 +484,10 @@ const QUESTIONS_DB = {
         "common-knowledge",
         "induction"
       ],
-      "type": "multiple_choice",
+      "type": "numerical",
       "correct_answer": "10 men",
       "explanation": "10 men. This is a classic common knowledge puzzle.",
-      "estimated_time": 240,
-      "options": [
-        "8.0",
-        "16.0",
-        "10 men",
-        "13.0"
-      ]
+      "estimated_time": 240
     },
     {
       "id": "Q1.29",
@@ -592,8 +502,8 @@ const QUESTIONS_DB = {
       ],
       "type": "numerical",
       "correct_answer": "2^64 - 1 moves (approximately 1",
-      "explanation": "2^64 - 1 moves (approximately 1.8×10^19)",
-      "estimated_time": 240
+      "explanation": "2^64 - 1 moves (approximately 1.8\u00d710^19)",
+      "estimated_time": 180
     },
     {
       "id": "Q1.30",
@@ -606,38 +516,26 @@ const QUESTIONS_DB = {
         "differential-equations",
         "ODE"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 180,
-      "options": [
-        "Cannot be determined without additional information",
-        "It's impossible to determine",
-        "Yes, always possible",
-        "Answer not provided"
-      ]
+      "estimated_time": 120
     },
     {
       "id": "Q1.31",
       "chapter": 1,
       "category": "Purely Quantitative & Logic",
       "difficulty": "Medium",
-      "question": "Random variables X and Y are Normally distributed: X ~ N(μx, σx²) and Y ~ N(μy, σy²). The correlation between X and Y is ρ. How do you choose constants a and b to minimize the variance of S = aX + bY under constraints a+b=1, 0<a<1, and 0<b<1?",
+      "question": "Random variables X and Y are Normally distributed: X ~ N(\u03bcx, \u03c3x\u00b2) and Y ~ N(\u03bcy, \u03c3y\u00b2). The correlation between X and Y is \u03c1. How do you choose constants a and b to minimize the variance of S = aX + bY under constraints a+b=1, 0<a<1, and 0<b<1?",
       "tags": [
         "statistics",
         "optimization",
         "portfolio-theory"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "This is equivalent to minimum variance portfolio problem",
       "explanation": "This is equivalent to minimum variance portfolio problem.",
-      "estimated_time": 120,
-      "options": [
-        "It's impossible to determine",
-        "This is equivalent to minimum variance portfolio problem",
-        "Never true",
-        "No direct relationship"
-      ]
+      "estimated_time": 240
     },
     {
       "id": "Q1.32",
@@ -652,13 +550,13 @@ const QUESTIONS_DB = {
       ],
       "type": "multiple_choice",
       "correct_answer": "Speed is infinite when beam is perpendicular to closest point",
-      "explanation": "Speed is infinite when beam is perpendicular to closest point. At 3L away, speed is approximately 60πL mph.",
-      "estimated_time": 240,
+      "explanation": "Speed is infinite when beam is perpendicular to closest point. At 3L away, speed is approximately 60\u03c0L mph.",
+      "estimated_time": 180,
       "options": [
-        "Insufficient information provided",
         "It's impossible to determine",
-        "Cannot be determined without additional information",
-        "Speed is infinite when beam is perpendicular to closest point"
+        "Always true in all cases",
+        "Speed is infinite when beam is perpendicular to closest point",
+        "Cannot be determined without additional information"
       ]
     },
     {
@@ -672,16 +570,10 @@ const QUESTIONS_DB = {
         "summation",
         "patterns"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 360,
-      "options": [
-        "Depends on market conditions",
-        "Yes, always possible",
-        "Answer not provided",
-        "It's impossible to determine"
-      ]
+      "estimated_time": 240
     },
     {
       "id": "Q1.34",
@@ -694,37 +586,31 @@ const QUESTIONS_DB = {
         "optimization",
         "pursuit-evasion"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Run in a spiral to gain angular advantage, then make a straight dash when you have sufficient lead",
       "explanation": "Run in a spiral to gain angular advantage, then make a straight dash when you have sufficient lead.",
-      "estimated_time": 300,
-      "options": [
-        "Cannot be determined without additional information",
-        "Run in a spiral to gain angular advantage, then make a straight dash when you have sufficient lead",
-        "No direct relationship",
-        "Depends on market conditions"
-      ]
+      "estimated_time": 300
     },
     {
       "id": "Q1.36",
       "chapter": 1,
       "category": "Purely Quantitative & Logic",
       "difficulty": "Medium",
-      "question": "What is ∫sec(θ)dθ equal to?",
+      "question": "What is \u222bsec(\u03b8)d\u03b8 equal to?",
       "tags": [
         "calculus",
         "integration",
         "trigonometry"
       ],
       "type": "multiple_choice",
-      "correct_answer": "ln|sec(θ) + tan(θ)| + C",
-      "explanation": "ln|sec(θ) + tan(θ)| + C",
+      "correct_answer": "ln|sec(\u03b8) + tan(\u03b8)| + C",
+      "explanation": "ln|sec(\u03b8) + tan(\u03b8)| + C",
       "estimated_time": 240,
       "options": [
-        "None of the above",
-        "ln|sec(θ) + tan(θ)| + C",
+        "ln|sec(\u03b8) + tan(\u03b8)| + C",
+        "Insufficient information provided",
         "Depends on market conditions",
-        "They are equal"
+        "Sometimes true, sometimes false"
       ]
     },
     {
@@ -732,7 +618,7 @@ const QUESTIONS_DB = {
       "chapter": 1,
       "category": "Purely Quantitative & Logic",
       "difficulty": "Medium",
-      "question": "Does the infinite sum Σ(n=1 to ∞) e^(-√n) converge?",
+      "question": "Does the infinite sum \u03a3(n=1 to \u221e) e^(-\u221an) converge?",
       "tags": [
         "calculus",
         "series",
@@ -741,12 +627,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Yes, it converges by comparison test",
       "explanation": "Yes, it converges by comparison test.",
-      "estimated_time": 120,
+      "estimated_time": 180,
       "options": [
-        "Yes, it converges by comparison test",
-        "No direct relationship",
         "No, it's impossible",
-        "Always true in all cases"
+        "No direct relationship",
+        "Sometimes true, sometimes false",
+        "Yes, it converges by comparison test"
       ]
     },
     {
@@ -760,16 +646,10 @@ const QUESTIONS_DB = {
         "weighing",
         "algorithm"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Two weighings suffice",
       "explanation": "Two weighings suffice. Divide into groups of 3, 3, and 2.",
-      "estimated_time": 120,
-      "options": [
-        "Sometimes true, sometimes false",
-        "They are equal",
-        "Two weighings suffice",
-        "Never true"
-      ]
+      "estimated_time": 60
     },
     {
       "id": "Q1.40",
@@ -782,16 +662,10 @@ const QUESTIONS_DB = {
         "strategy",
         "symmetry"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Round table",
       "explanation": "Round table. Go first, place quarter in center, then use symmetry strategy. Doesn't work if table already has a quarter in center.",
-      "estimated_time": 120,
-      "options": [
-        "Always true in all cases",
-        "No direct relationship",
-        "Depends on market conditions",
-        "Round table"
-      ]
+      "estimated_time": 180
     },
     {
       "id": "Q1.41",
@@ -804,7 +678,7 @@ const QUESTIONS_DB = {
         "number-theory",
         "puzzle"
       ],
-      "type": "numerical",
+      "type": "free_response",
       "correct_answer": "2, 2, and 9 years old",
       "explanation": "2, 2, and 9 years old. Only factorization with repeated sum is (2,2,9) and (1,6,6), so 'eldest' resolves ambiguity.",
       "estimated_time": 120
@@ -820,16 +694,10 @@ const QUESTIONS_DB = {
         "optimal-stopping",
         "martingale"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 360,
-      "options": [
-        "Answer not provided",
-        "Depends on market conditions",
-        "Sometimes true, sometimes false",
-        "Yes, always possible"
-      ]
+      "estimated_time": 360
     },
     {
       "id": "Q1.43",
@@ -842,38 +710,26 @@ const QUESTIONS_DB = {
         "tiling",
         "parity"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "No",
       "explanation": "No. Each domino covers one white and one black square. Opposite corners are same color, leaving unequal numbers of each color.",
-      "estimated_time": 180,
-      "options": [
-        "No",
-        "Never true",
-        "It's impossible to determine",
-        "Yes, always possible"
-      ]
+      "estimated_time": 180
     },
     {
       "id": "Q1.44",
       "chapter": 1,
       "category": "Purely Quantitative & Logic",
       "difficulty": "Medium",
-      "question": "Why is it that if p is a prime number greater than 3, then p² - 1 is always divisible by 24 with no remainder?",
+      "question": "Why is it that if p is a prime number greater than 3, then p\u00b2 - 1 is always divisible by 24 with no remainder?",
       "tags": [
         "number-theory",
         "modular-arithmetic",
         "proof"
       ],
-      "type": "multiple_choice",
-      "correct_answer": "p² - 1 = (p-1)(p+1)",
-      "explanation": "p² - 1 = (p-1)(p+1). For p>3 and prime, p±1 are even consecutive numbers, so divisible by 8. One of p-1, p, p+1 is divisible by 3.",
-      "estimated_time": 240,
-      "options": [
-        "Insufficient information provided",
-        "No direct relationship",
-        "p² - 1 = (p-1)(p+1)",
-        "Always true in all cases"
-      ]
+      "type": "free_response",
+      "correct_answer": "p\u00b2 - 1 = (p-1)(p+1)",
+      "explanation": "p\u00b2 - 1 = (p-1)(p+1). For p>3 and prime, p\u00b11 are even consecutive numbers, so divisible by 8. One of p-1, p, p+1 is divisible by 3.",
+      "estimated_time": 240
     },
     {
       "id": "Q1.45",
@@ -889,12 +745,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Don't bid at all",
       "explanation": "Don't bid at all. Expected payoff is always negative due to winner's curse.",
-      "estimated_time": 240,
+      "estimated_time": 360,
       "options": [
-        "Sometimes true, sometimes false",
         "Don't bid at all",
         "No direct relationship",
-        "Cannot be determined without additional information"
+        "They are equal",
+        "None of the above"
       ]
     },
     {
@@ -907,16 +763,10 @@ const QUESTIONS_DB = {
         "logic",
         "lateral-thinking"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Light both ends simultaneously",
       "explanation": "Light both ends simultaneously. Fuse will burn completely in 30 seconds.",
-      "estimated_time": 90,
-      "options": [
-        "They are equal",
-        "Depends on market conditions",
-        "None of the above",
-        "Light both ends simultaneously"
-      ]
+      "estimated_time": 60
     },
     {
       "id": "Q1.47",
@@ -929,16 +779,10 @@ const QUESTIONS_DB = {
         "spherical-geometry",
         "puzzle"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Infinitely many",
       "explanation": "Infinitely many. North Pole, plus infinite circle of points near South Pole.",
-      "estimated_time": 240,
-      "options": [
-        "No direct relationship",
-        "Never true",
-        "Insufficient information provided",
-        "Infinitely many"
-      ]
+      "estimated_time": 180
     },
     {
       "id": "Q1.48",
@@ -951,16 +795,10 @@ const QUESTIONS_DB = {
         "weighing",
         "clever-solution"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Take 1 coin from collector 1, 2 from collector 2, etc",
       "explanation": "Take 1 coin from collector 1, 2 from collector 2, etc. Weigh total. Deficit in tenths of an ounce identifies the cheater.",
-      "estimated_time": 120,
-      "options": [
-        "It's impossible to determine",
-        "Take 1 coin from collector 1, 2 from collector 2, etc",
-        "Cannot be determined without additional information",
-        "None of the above"
-      ]
+      "estimated_time": 90
     },
     {
       "id": "Q1.49",
@@ -973,16 +811,10 @@ const QUESTIONS_DB = {
         "backward-induction",
         "rational-agents"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Work backwards from 2 pirates",
       "explanation": "Work backwards from 2 pirates. The most senior pirate (pirate 5) should offer 1 coin each to pirates 1 and 3, keeping 98 coins. This gets him 3 votes (himself, 1, and 3).",
-      "estimated_time": 240,
-      "options": [
-        "Work backwards from 2 pirates",
-        "Depends on market conditions",
-        "They are equal",
-        "Sometimes true, sometimes false"
-      ]
+      "estimated_time": 240
     },
     {
       "id": "Q1.50",
@@ -995,16 +827,10 @@ const QUESTIONS_DB = {
         "game-theory",
         "induction"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Start with small numbers",
       "explanation": "Start with small numbers. With 1 tiger, sheep is eaten. With 2 tigers, neither eats (would become sheep and be eaten). Pattern: even number of tigers = safe; odd number = eaten. With 100 tigers, sheep is safe.",
-      "estimated_time": 240,
-      "options": [
-        "It's impossible to determine",
-        "Sometimes true, sometimes false",
-        "Always true in all cases",
-        "Start with small numbers"
-      ]
+      "estimated_time": 120
     },
     {
       "id": "Q1.51",
@@ -1017,7 +843,7 @@ const QUESTIONS_DB = {
         "optimization",
         "puzzle"
       ],
-      "type": "numerical",
+      "type": "free_response",
       "correct_answer": "17 minutes",
       "explanation": "17 minutes. C and D cross (2 min), D returns (1 min), A and B cross (10 min), C returns (2 min), C and D cross (2 min).",
       "estimated_time": 120
@@ -1033,16 +859,10 @@ const QUESTIONS_DB = {
         "lateral-thinking",
         "time-measurement"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Light both ends of fuse 1 and one end of fuse 2",
       "explanation": "Light both ends of fuse 1 and one end of fuse 2. When fuse 1 burns out (30 min), light the other end of fuse 2. When fuse 2 burns out, 45 min have elapsed.",
-      "estimated_time": 120,
-      "options": [
-        "Light both ends of fuse 1 and one end of fuse 2",
-        "Never true",
-        "None of the above",
-        "Always true in all cases"
-      ]
+      "estimated_time": 90
     },
     {
       "id": "Q1.53",
@@ -1059,7 +879,7 @@ const QUESTIONS_DB = {
       "type": "numerical",
       "correct_answer": "Maximum cost $500 (5 weighings)",
       "explanation": "Maximum cost $500 (5 weighings). Divide into groups following 3^n pattern. Use information from each weighing to narrow down possibilities.",
-      "estimated_time": 300
+      "estimated_time": 240
     },
     {
       "id": "Q1.54",
@@ -1072,38 +892,26 @@ const QUESTIONS_DB = {
         "Markov-chain",
         "expected-value"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Very difficult",
-      "explanation": "Very difficult. Let F_i be event all balls become color i. By symmetry P(F_i)=1/n. Condition on F_1. Use states based on number of color-1 balls. Answer: (n-1)²",
-      "estimated_time": 180,
-      "options": [
-        "Cannot be determined without additional information",
-        "None of the above",
-        "Insufficient information provided",
-        "Very difficult"
-      ]
+      "explanation": "Very difficult. Let F_i be event all balls become color i. By symmetry P(F_i)=1/n. Condition on F_1. Use states based on number of color-1 balls. Answer: (n-1)\u00b2",
+      "estimated_time": 240
     },
     {
       "id": "Q1.59",
       "chapter": 1,
       "category": "Purely Quantitative & Logic",
       "difficulty": "Easy",
-      "question": "Can you pack 53 bricks of dimension 1×1×4 into a 6×6×6 box?",
+      "question": "Can you pack 53 bricks of dimension 1\u00d71\u00d74 into a 6\u00d76\u00d76 box?",
       "tags": [
         "logic",
         "3D-geometry",
         "parity"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "No",
-      "explanation": "No. Imagine box made of 2×2×2 cubes (27 cubes, alternating black/white). Each brick occupies half of 2 cubes, one each color. One color has only 13 cubes, limiting to 52 bricks max.",
-      "estimated_time": 120,
-      "options": [
-        "Cannot be determined without additional information",
-        "No",
-        "They are equal",
-        "Yes, always possible"
-      ]
+      "explanation": "No. Imagine box made of 2\u00d72\u00d72 cubes (27 cubes, alternating black/white). Each brick occupies half of 2 cubes, one each color. One color has only 13 cubes, limiting to 52 bricks max.",
+      "estimated_time": 90
     },
     {
       "id": "Q1.60",
@@ -1116,16 +924,10 @@ const QUESTIONS_DB = {
         "combinatorics",
         "puzzle"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Both need 0,1,2",
       "explanation": "Both need 0,1,2. For 11 and 22, both need 1 and 2. Both need 0 for 01-09. Cube 1: 0,1,2,3,4,5. Cube 2: 0,1,2,6,7,8. Use 6 as 9 (rotate)!",
-      "estimated_time": 180,
-      "options": [
-        "Never true",
-        "Sometimes true, sometimes false",
-        "They are equal",
-        "Both need 0,1,2"
-      ]
+      "estimated_time": 240
     },
     {
       "id": "Q1.61",
@@ -1138,39 +940,27 @@ const QUESTIONS_DB = {
         "puzzle",
         "lateral-thinking"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Ask either guard: 'Would the other guard say you're guarding the offer door?' If yes, choose other door",
       "explanation": "Ask either guard: 'Would the other guard say you're guarding the offer door?' If yes, choose other door. If no, choose this door.",
-      "estimated_time": 120,
-      "options": [
-        "Insufficient information provided",
-        "No, it's impossible",
-        "Ask either guard: 'Would the other guard say you're guarding the offer door?' If yes, choose other door",
-        "Always true in all cases"
-      ]
+      "estimated_time": 120
     },
     {
       "id": "Q2.1",
       "chapter": 2,
       "category": "Derivatives",
       "difficulty": "Easy",
-      "question": "All Black-Scholes assumptions hold. No dividends. Stock price is $100. Riskless rate is 5% per annum. Consider a one-year European call option struck at-the-money. If volatility is zero (σ=0), what is the call worth? How do you hedge it?",
+      "question": "All Black-Scholes assumptions hold. No dividends. Stock price is $100. Riskless rate is 5% per annum. Consider a one-year European call option struck at-the-money. If volatility is zero (\u03c3=0), what is the call worth? How do you hedge it?",
       "tags": [
         "Black-Scholes",
         "option-pricing",
         "zero-volatility",
         "hedging"
       ],
-      "type": "multiple_choice",
+      "type": "numerical",
       "correct_answer": "Call worth approximately $4",
       "explanation": "Call worth approximately $4.88 (= 100 - 100e^(-0.05)). Hedge by holding the stock.",
-      "estimated_time": 90,
-      "options": [
-        "Call worth approximately $4",
-        "Not applicable",
-        "Cannot determine",
-        "Insufficient information"
-      ]
+      "estimated_time": 60
     },
     {
       "id": "Q2.2",
@@ -1187,12 +977,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Short maturity option has higher gamma (more curvature near expiration)",
       "explanation": "Short maturity option has higher gamma (more curvature near expiration).",
-      "estimated_time": 60,
+      "estimated_time": 120,
       "options": [
-        "Short maturity option has higher gamma (more curvature near expiration)",
         "Cannot be determined without additional information",
-        "None of the above",
-        "Short maturity option has lower gamma (more curvature near expiration)"
+        "Short maturity option has lower gamma (more curvature near expiration)",
+        "Always true in all cases",
+        "Short maturity option has higher gamma (more curvature near expiration)"
       ]
     },
     {
@@ -1207,10 +997,16 @@ const QUESTIONS_DB = {
         "replication",
         "arbitrage"
       ],
-      "type": "numerical",
+      "type": "multiple_choice",
       "correct_answer": "$0",
-      "explanation": "$0.75. Buy 75/100 of a share now. When it hits $100, you have $0.75×(100/75) = $1.",
-      "estimated_time": 120
+      "explanation": "$0.75. Buy 75/100 of a share now. When it hits $100, you have $0.75\u00d7(100/75) = $1.",
+      "estimated_time": 240,
+      "options": [
+        "$0",
+        "0.0",
+        "0.0",
+        "0.0"
+      ]
     },
     {
       "id": "Q2.4",
@@ -1228,10 +1024,10 @@ const QUESTIONS_DB = {
       "explanation": "Put-call parity: C = P + S - X. With r=0 and ATM, C=P. Asymmetry is offset by stock ownership component.",
       "estimated_time": 180,
       "options": [
-        "It's impossible to determine",
+        "Sometimes true, sometimes false",
         "Put-call parity: C = P + S - X",
-        "Depends on market conditions",
-        "None of the above"
+        "Cannot be determined without additional information",
+        "Depends on market conditions"
       ]
     },
     {
@@ -1249,12 +1045,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Greater than 0",
       "explanation": "Greater than 0.5. Positive interest rate makes forward price exceed spot, shifting probability distribution.",
-      "estimated_time": 60,
+      "estimated_time": 120,
       "options": [
+        "Insufficient information provided",
         "Greater than 0",
         "Less than 0",
-        "Always true in all cases",
-        "Cannot be determined without additional information"
+        "Never true"
       ]
     },
     {
@@ -1271,12 +1067,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Depends on relative magnitude of r and p",
       "explanation": "Depends on relative magnitude of r and p. If r>p, delta>0.5; if r<p, delta<0.5.",
-      "estimated_time": 180,
+      "estimated_time": 240,
       "options": [
+        "No direct relationship",
         "Depends on relative magnitude of r and p",
-        "Never true",
-        "Always true in all cases",
-        "Cannot be determined without additional information"
+        "Cannot be determined without additional information",
+        "Always true in all cases"
       ]
     },
     {
@@ -1294,12 +1090,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Expect high volatility",
       "explanation": "Expect high volatility. Consider buying more calls (long vega position) or adjusting hedge as volatility spikes.",
-      "estimated_time": 60,
+      "estimated_time": 120,
       "options": [
         "It's impossible to determine",
         "Expect high volatility",
-        "None of the above",
-        "Sometimes true, sometimes false"
+        "Cannot be determined without additional information",
+        "None of the above"
       ]
     },
     {
@@ -1319,10 +1115,10 @@ const QUESTIONS_DB = {
       "explanation": "Time value is value above intrinsic value. Graph is hump-shaped, maximizing near ATM.",
       "estimated_time": 180,
       "options": [
-        "Never true",
-        "Insufficient information provided",
+        "Always true in all cases",
+        "None of the above",
         "Time value is value above intrinsic value",
-        "None of the above"
+        "Never true"
       ]
     },
     {
@@ -1339,12 +1135,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Delta decreases as stock falls",
       "explanation": "Delta decreases as stock falls. Since you're short the call, you're long delta, so you sell stock as delta decreases.",
-      "estimated_time": 240,
+      "estimated_time": 180,
       "options": [
+        "Sometimes true, sometimes false",
         "Delta decreases as stock falls",
         "They are equal",
-        "Depends on market conditions",
-        "Cannot be determined without additional information"
+        "No direct relationship"
       ]
     },
     {
@@ -1359,16 +1155,10 @@ const QUESTIONS_DB = {
         "stochastic-processes",
         "option-pricing"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 240,
-      "options": [
-        "Yes, always possible",
-        "Answer not provided",
-        "It's impossible to determine",
-        "Never true"
-      ]
+      "estimated_time": 300
     },
     {
       "id": "Q2.18",
@@ -1385,12 +1175,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Graph (1) is hockey stick",
       "explanation": "Graph (1) is hockey stick. Graph (2) is smoothed hockey stick. Graph (3) is smooth S-curve. Time decay and optionality create smoothing.",
-      "estimated_time": 240,
+      "estimated_time": 120,
       "options": [
         "Graph (1) is hockey stick",
+        "Insufficient information provided",
         "None of the above",
-        "Never true",
-        "They are equal"
+        "No direct relationship"
       ]
     },
     {
@@ -1398,18 +1188,18 @@ const QUESTIONS_DB = {
       "chapter": 2,
       "category": "Derivatives",
       "difficulty": "Medium",
-      "question": "Two European calls on same stock, same strike, constant rates. One matures in 1 year, other in 4 years. You put σ=15% into Black-Scholes for 1-year option. What value of σ for 4-year option? Assume T-t=1 in Black-Scholes in both cases (one unit of time equals 4 years in second case but only 1 year in first).",
+      "question": "Two European calls on same stock, same strike, constant rates. One matures in 1 year, other in 4 years. You put \u03c3=15% into Black-Scholes for 1-year option. What value of \u03c3 for 4-year option? Assume T-t=1 in Black-Scholes in both cases (one unit of time equals 4 years in second case but only 1 year in first).",
       "tags": [
         "volatility",
         "time-scaling",
         "Black-Scholes"
       ],
       "type": "multiple_choice",
-      "correct_answer": "Use σ = 15%/2 = 7",
-      "explanation": "Use σ = 15%/2 = 7.5% because volatility scales with √T.",
-      "estimated_time": 240,
+      "correct_answer": "Use \u03c3 = 15%/2 = 7",
+      "explanation": "Use \u03c3 = 15%/2 = 7.5% because volatility scales with \u221aT.",
+      "estimated_time": 120,
       "options": [
-        "Use σ = 15%/2 = 7",
+        "Use \u03c3 = 15%/2 = 7",
         "Not applicable",
         "Cannot determine",
         "Insufficient information"
@@ -1420,23 +1210,17 @@ const QUESTIONS_DB = {
       "chapter": 2,
       "category": "Derivatives",
       "difficulty": "Hard",
-      "question": "Black-Scholes assumes geometric Brownian motion: dS(t) = μS(t)dt + σS(t)dw(t). Suppose instead stock follows arithmetic Brownian motion: dS(t) = μdt + σdw(t). Derive pricing formula for a call option on S(t). Assume ATM option [S(t)=X], riskless rate r=0, and no dividends.",
+      "question": "Black-Scholes assumes geometric Brownian motion: dS(t) = \u03bcS(t)dt + \u03c3S(t)dw(t). Suppose instead stock follows arithmetic Brownian motion: dS(t) = \u03bcdt + \u03c3dw(t). Derive pricing formula for a call option on S(t). Assume ATM option [S(t)=X], riskless rate r=0, and no dividends.",
       "tags": [
         "stochastic-calculus",
         "arithmetic-Brownian-motion",
         "PDE",
         "option-pricing"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 240,
-      "options": [
-        "None of the above",
-        "They are equal",
-        "Yes, always possible",
-        "Answer not provided"
-      ]
+      "estimated_time": 240
     },
     {
       "id": "Q2.27",
@@ -1452,11 +1236,11 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Simulate the underlying",
       "explanation": "Simulate the underlying. The call doesn't follow GBM, but the stock does.",
-      "estimated_time": 120,
+      "estimated_time": 240,
       "options": [
         "Insufficient information provided",
-        "Depends on market conditions",
-        "They are equal",
+        "None of the above",
+        "No direct relationship",
         "Simulate the underlying"
       ]
     },
@@ -1475,12 +1259,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Positive convexity",
       "explanation": "Positive convexity. MBS have negative convexity due to prepayment risk, which hurts when rates fall.",
-      "estimated_time": 60,
+      "estimated_time": 120,
       "options": [
-        "Positive convexity",
-        "It's impossible to determine",
         "None of the above",
-        "Sometimes true, sometimes false"
+        "Cannot be determined without additional information",
+        "Insufficient information provided",
+        "Positive convexity"
       ]
     },
     {
@@ -1497,12 +1281,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Buy high, sell low repeatedly",
       "explanation": "Buy high, sell low repeatedly. Transaction costs kill you. Also, whipsaw risk.",
-      "estimated_time": 60,
+      "estimated_time": 90,
       "options": [
-        "No direct relationship",
+        "Sometimes true, sometimes false",
         "Buy high, sell low repeatedly",
-        "It's impossible to determine",
-        "Sometimes true, sometimes false"
+        "Cannot be determined without additional information",
+        "Depends on market conditions"
       ]
     },
     {
@@ -1510,20 +1294,20 @@ const QUESTIONS_DB = {
       "chapter": 2,
       "category": "Derivatives",
       "difficulty": "Medium",
-      "question": "What can you tell me about ∫₀ᵀ w(t)dt, where w(t) is a standard Brownian motion?",
+      "question": "What can you tell me about \u222b\u2080\u1d40 w(t)dt, where w(t) is a standard Brownian motion?",
       "tags": [
         "stochastic-calculus",
         "Brownian-motion",
         "Ito-integral"
       ],
       "type": "multiple_choice",
-      "correct_answer": "It's normally distributed with mean 0 and variance T³/3",
-      "explanation": "It's normally distributed with mean 0 and variance T³/3.",
+      "correct_answer": "It's normally distributed with mean 0 and variance T\u00b3/3",
+      "explanation": "It's normally distributed with mean 0 and variance T\u00b3/3.",
       "estimated_time": 120,
       "options": [
-        "Never true",
+        "They are equal",
+        "It's normally distributed with mean 0 and variance T\u00b3/3",
         "Yes, always possible",
-        "It's normally distributed with mean 0 and variance T³/3",
         "None of the above"
       ]
     },
@@ -1532,21 +1316,21 @@ const QUESTIONS_DB = {
       "chapter": 2,
       "category": "Derivatives",
       "difficulty": "Medium",
-      "question": "What can you say about ∫₀ᵀ w(t)dw(t), where w(t) is a standard Brownian motion?",
+      "question": "What can you say about \u222b\u2080\u1d40 w(t)dw(t), where w(t) is a standard Brownian motion?",
       "tags": [
         "stochastic-calculus",
         "Ito-integral",
         "Brownian-motion"
       ],
       "type": "multiple_choice",
-      "correct_answer": "By Ito's lemma: ∫₀ᵀ w(t)dw(t) = [w(T)² - T]/2",
-      "explanation": "By Ito's lemma: ∫₀ᵀ w(t)dw(t) = [w(T)² - T]/2.",
-      "estimated_time": 240,
+      "correct_answer": "By Ito's lemma: \u222b\u2080\u1d40 w(t)dw(t) = [w(T)\u00b2 - T]/2",
+      "explanation": "By Ito's lemma: \u222b\u2080\u1d40 w(t)dw(t) = [w(T)\u00b2 - T]/2.",
+      "estimated_time": 120,
       "options": [
         "Insufficient information provided",
+        "By Ito's lemma: \u222b\u2080\u1d40 w(t)dw(t) = [w(T)\u00b2 - T]/2",
         "Depends on market conditions",
-        "None of the above",
-        "By Ito's lemma: ∫₀ᵀ w(t)dw(t) = [w(T)² - T]/2"
+        "None of the above"
       ]
     },
     {
@@ -1554,23 +1338,17 @@ const QUESTIONS_DB = {
       "chapter": 2,
       "category": "Derivatives",
       "difficulty": "Hard",
-      "question": "The payoff to a European 'power call' is given by max(Sᵃ-X, 0). Derive the price of a European power call option using Black-Scholes pricing.",
+      "question": "The payoff to a European 'power call' is given by max(S\u1d43-X, 0). Derive the price of a European power call option using Black-Scholes pricing.",
       "tags": [
         "exotic-options",
         "power-options",
         "Black-Scholes",
         "change-of-numeraire"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 360,
-      "options": [
-        "Yes, always possible",
-        "Insufficient information provided",
-        "Always true in all cases",
-        "Answer not provided"
-      ]
+      "estimated_time": 300
     },
     {
       "id": "Q2.33",
@@ -1586,12 +1364,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Market recognizes fat tails in return distribution, crash risk, and that Black-Scholes assumptions don't perfectly hold",
       "explanation": "Market recognizes fat tails in return distribution, crash risk, and that Black-Scholes assumptions don't perfectly hold.",
-      "estimated_time": 120,
+      "estimated_time": 180,
       "options": [
-        "Market recognizes fat tails in return distribution, crash risk, and that Black-Scholes assumptions don't perfectly hold",
+        "Cannot be determined without additional information",
         "Never true",
-        "No direct relationship",
-        "Sometimes true, sometimes false"
+        "Insufficient information provided",
+        "Market recognizes fat tails in return distribution, crash risk, and that Black-Scholes assumptions don't perfectly hold"
       ]
     },
     {
@@ -1608,12 +1386,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "No",
       "explanation": "No. That would double-count the vanilla option. Price is less than the sum.",
-      "estimated_time": 240,
+      "estimated_time": 180,
       "options": [
         "Yes, always possible",
-        "No direct relationship",
         "No",
-        "Insufficient information provided"
+        "Depends on market conditions",
+        "Cannot be determined without additional information"
       ]
     },
     {
@@ -1628,23 +1406,17 @@ const QUESTIONS_DB = {
         "path-dependent",
         "exotic-options"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 360,
-      "options": [
-        "Insufficient information provided",
-        "Yes, always possible",
-        "Answer not provided",
-        "Depends on market conditions"
-      ]
+      "estimated_time": 360
     },
     {
       "id": "Q2.36",
       "chapter": 2,
       "category": "Derivatives",
       "difficulty": "Medium",
-      "question": "Gold prices follow a Gaussian process. Current price is $400. Riskless rate is zero. Volatility is σ=$60 per annum. What is value today of digital cash-or-nothing option paying $1 million in six months if gold price is at or above $430?",
+      "question": "Gold prices follow a Gaussian process. Current price is $400. Riskless rate is zero. Volatility is \u03c3=$60 per annum. What is value today of digital cash-or-nothing option paying $1 million in six months if gold price is at or above $430?",
       "tags": [
         "digital-options",
         "binary-options",
@@ -1652,13 +1424,13 @@ const QUESTIONS_DB = {
       ],
       "type": "multiple_choice",
       "correct_answer": "Use normal distribution",
-      "explanation": "Use normal distribution. P(S≥430) = Φ((400-430)/(60√0.5)) ≈ 0.24. Value ≈ $240,000.",
-      "estimated_time": 120,
+      "explanation": "Use normal distribution. P(S\u2265430) = \u03a6((400-430)/(60\u221a0.5)) \u2248 0.24. Value \u2248 $240,000.",
+      "estimated_time": 240,
       "options": [
-        "Insufficient information provided",
-        "Yes, always possible",
-        "It's impossible to determine",
-        "Use normal distribution"
+        "Use normal distribution",
+        "Never true",
+        "No direct relationship",
+        "Yes, always possible"
       ]
     },
     {
@@ -1672,16 +1444,10 @@ const QUESTIONS_DB = {
         "derivatives",
         "calculus"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 120,
-      "options": [
-        "Answer not provided",
-        "It's impossible to determine",
-        "Insufficient information provided",
-        "Yes, always possible"
-      ]
+      "estimated_time": 240
     },
     {
       "id": "Q2.38",
@@ -1694,23 +1460,17 @@ const QUESTIONS_DB = {
         "perpetual-options",
         "optimal-exercise"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 360,
-      "options": [
-        "Answer not provided",
-        "Yes, always possible",
-        "They are equal",
-        "Cannot be determined without additional information"
-      ]
+      "estimated_time": 240
     },
     {
       "id": "Q2.39",
       "chapter": 2,
       "category": "Derivatives",
       "difficulty": "Medium",
-      "question": "Let 'L' denote three-month US dollar LIBOR rate. Consider an interest rate swap where Party A pays L to Party B, and Party B pays 24% - 2×L to Party A. Can you reverse engineer this deal and express it in simpler terms?",
+      "question": "Let 'L' denote three-month US dollar LIBOR rate. Consider an interest rate swap where Party A pays L to Party B, and Party B pays 24% - 2\u00d7L to Party A. Can you reverse engineer this deal and express it in simpler terms?",
       "tags": [
         "swaps",
         "interest-rate-derivatives",
@@ -1740,7 +1500,7 @@ const QUESTIONS_DB = {
       ],
       "type": "multiple_choice",
       "correct_answer": "Approximately 0",
-      "explanation": "Approximately 0.5 shares per option (delta ≈ 0.5 for ATM options).",
+      "explanation": "Approximately 0.5 shares per option (delta \u2248 0.5 for ATM options).",
       "estimated_time": 60,
       "options": [
         "Approximately 0",
@@ -1763,12 +1523,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Mean reversion reduces volatility over time, so option prices would be lower",
       "explanation": "Mean reversion reduces volatility over time, so option prices would be lower.",
-      "estimated_time": 240,
+      "estimated_time": 120,
       "options": [
-        "None of the above",
-        "Never true",
+        "Always true in all cases",
+        "Mean reversion reduces volatility over time, so option prices would be lower",
         "Depends on market conditions",
-        "Mean reversion reduces volatility over time, so option prices would be lower"
+        "Insufficient information provided"
       ]
     },
     {
@@ -1787,10 +1547,10 @@ const QUESTIONS_DB = {
       "explanation": "When model is wrong, when you hedge at wrong frequency, when transaction costs are high, or when you're hedging the wrong risk.",
       "estimated_time": 120,
       "options": [
-        "When model is wrong, when you hedge at wrong frequency, when transaction costs are high, or when you're hedging the wrong risk",
-        "None of the above",
-        "Cannot be determined without additional information",
-        "They are equal"
+        "No direct relationship",
+        "Always true in all cases",
+        "It's impossible to determine",
+        "When model is wrong, when you hedge at wrong frequency, when transaction costs are high, or when you're hedging the wrong risk"
       ]
     },
     {
@@ -1807,12 +1567,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Sell stock holdings (if you have them), or buy bonds and gradually reduce as stock price changes",
       "explanation": "Sell stock holdings (if you have them), or buy bonds and gradually reduce as stock price changes.",
-      "estimated_time": 180,
+      "estimated_time": 240,
       "options": [
+        "Insufficient information provided",
+        "No direct relationship",
         "Sell stock holdings (if you have them), or buy bonds and gradually reduce as stock price changes",
-        "Depends on market conditions",
-        "Never true",
-        "Insufficient information provided"
+        "None of the above"
       ]
     },
     {
@@ -1828,8 +1588,8 @@ const QUESTIONS_DB = {
       ],
       "type": "numerical",
       "correct_answer": "Approximately 13",
-      "explanation": "Approximately 13.86 inches. Area scales with diameter squared: d₂ = d₁√(8/6) = 12√(4/3).",
-      "estimated_time": 90
+      "explanation": "Approximately 13.86 inches. Area scales with diameter squared: d\u2082 = d\u2081\u221a(8/6) = 12\u221a(4/3).",
+      "estimated_time": 120
     },
     {
       "id": "Q2.45",
@@ -1842,16 +1602,10 @@ const QUESTIONS_DB = {
         "market-views",
         "strategy"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "When you're bullish on IBM or want to buy IBM stock at a lower price (and collect premium while waiting)",
       "explanation": "When you're bullish on IBM or want to buy IBM stock at a lower price (and collect premium while waiting).",
-      "estimated_time": 60,
-      "options": [
-        "Depends on market conditions",
-        "It's impossible to determine",
-        "When you're bullish on IBM or want to buy IBM stock at a lower price (and collect premium while waiting)",
-        "Insufficient information provided"
-      ]
+      "estimated_time": 90
     },
     {
       "id": "Q2.46",
@@ -1867,12 +1621,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Arizona field has higher forward price",
       "explanation": "Arizona field has higher forward price. Florida beach has convenience yield (income stream), which reduces forward price.",
-      "estimated_time": 120,
+      "estimated_time": 180,
       "options": [
-        "Arizona field has higher forward price",
-        "Insufficient information provided",
+        "Sometimes true, sometimes false",
         "Arizona field has lower forward price",
-        "Sometimes true, sometimes false"
+        "They are equal",
+        "Arizona field has higher forward price"
       ]
     },
     {
@@ -1880,21 +1634,21 @@ const QUESTIONS_DB = {
       "chapter": 2,
       "category": "Derivatives",
       "difficulty": "Easy",
-      "question": "You have 30 days of 'representative' stock price data. How do you calculate historical volatility σ² to use in Black-Scholes?",
+      "question": "You have 30 days of 'representative' stock price data. How do you calculate historical volatility \u03c3\u00b2 to use in Black-Scholes?",
       "tags": [
         "volatility",
         "historical-data",
         "estimation"
       ],
       "type": "multiple_choice",
-      "correct_answer": "Calculate daily log returns, compute sample standard deviation, annualize by multiplying by √252",
-      "explanation": "Calculate daily log returns, compute sample standard deviation, annualize by multiplying by √252.",
-      "estimated_time": 60,
+      "correct_answer": "Calculate daily log returns, compute sample standard deviation, annualize by multiplying by \u221a252",
+      "explanation": "Calculate daily log returns, compute sample standard deviation, annualize by multiplying by \u221a252.",
+      "estimated_time": 90,
       "options": [
-        "It's impossible to determine",
-        "Calculate daily log returns, compute sample standard deviation, annualize by multiplying by √252",
-        "Cannot be determined without additional information",
-        "None of the above"
+        "Calculate daily log returns, compute sample standard deviation, annualize by multiplying by \u221a252",
+        "Sometimes true, sometimes false",
+        "Insufficient information provided",
+        "Never true"
       ]
     },
     {
@@ -1911,12 +1665,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Par (100)",
       "explanation": "Par (100). Top issuer's credit spread defines the swap curve, so repricing gives same value.",
-      "estimated_time": 180,
+      "estimated_time": 240,
       "options": [
-        "It's impossible to determine",
         "Par (100)",
-        "Cannot be determined without additional information",
-        "They are equal"
+        "Insufficient information provided",
+        "Always true in all cases",
+        "Never true"
       ]
     },
     {
@@ -1933,12 +1687,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "We create a riskless portfolio by hedging",
       "explanation": "We create a riskless portfolio by hedging. Riskless portfolios must earn riskless rate, otherwise arbitrage opportunity exists.",
-      "estimated_time": 120,
+      "estimated_time": 60,
       "options": [
-        "Insufficient information provided",
-        "Never true",
         "We create a riskless portfolio by hedging",
-        "Always true in all cases"
+        "Depends on market conditions",
+        "None of the above",
+        "Cannot be determined without additional information"
       ]
     },
     {
@@ -1955,12 +1709,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Implied volatility is generally better - it's market's forward-looking consensus and incorporates all available information",
       "explanation": "Implied volatility is generally better - it's market's forward-looking consensus and incorporates all available information.",
-      "estimated_time": 60,
+      "estimated_time": 90,
       "options": [
+        "Never true",
+        "Insufficient information provided",
         "Implied volatility is generally better - it's market's forward-looking consensus and incorporates all available information",
-        "Depends on market conditions",
-        "They are equal",
-        "Cannot be determined without additional information"
+        "No direct relationship"
       ]
     },
     {
@@ -1979,10 +1733,10 @@ const QUESTIONS_DB = {
       "explanation": "Depends on interest rates and dividends. With positive rates and no dividends, OTM call is more valuable.",
       "estimated_time": 60,
       "options": [
-        "Depends on interest rates and dividends",
         "Always true in all cases",
-        "None of the above",
-        "It's impossible to determine"
+        "Cannot be determined without additional information",
+        "Depends on interest rates and dividends",
+        "They are equal"
       ]
     },
     {
@@ -2000,12 +1754,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Time decay (theta) compensates for risk from gamma",
       "explanation": "Time decay (theta) compensates for risk from gamma. For long options, usually theta<0 and gamma>0. Not always opposite signs in all cases.",
-      "estimated_time": 120,
+      "estimated_time": 180,
       "options": [
-        "It's impossible to determine",
-        "Depends on market conditions",
+        "They are equal",
+        "Sometimes true, sometimes false",
         "Time decay (theta) compensates for risk from gamma",
-        "Never true"
+        "No direct relationship"
       ]
     },
     {
@@ -2021,13 +1775,13 @@ const QUESTIONS_DB = {
       ],
       "type": "multiple_choice",
       "correct_answer": "Find risk-neutral probability first",
-      "explanation": "Find risk-neutral probability first. Use replication or risk-neutral valuation. Value ≈ $8.33.",
-      "estimated_time": 90,
+      "explanation": "Find risk-neutral probability first. Use replication or risk-neutral valuation. Value \u2248 $8.33.",
+      "estimated_time": 60,
       "options": [
-        "Sometimes true, sometimes false",
-        "Never true",
+        "Cannot be determined without additional information",
         "Find risk-neutral probability first",
-        "They are equal"
+        "It's impossible to determine",
+        "Insufficient information provided"
       ]
     },
     {
@@ -2046,10 +1800,10 @@ const QUESTIONS_DB = {
       "explanation": "Expected value is infinite, but most people wouldn't pay much to play. Quote based on risk tolerance and practical considerations.",
       "estimated_time": 360,
       "options": [
-        "No direct relationship",
+        "Never true",
+        "Insufficient information provided",
         "Expected value is infinite, but most people wouldn't pay much to play",
-        "They are equal",
-        "It's impossible to determine"
+        "Sometimes true, sometimes false"
       ]
     },
     {
@@ -2065,7 +1819,7 @@ const QUESTIONS_DB = {
       ],
       "type": "numerical",
       "correct_answer": "20%",
-      "explanation": "20%. Variance scales linearly with time, so standard deviation scales with √time: 10%×√4 = 20%.",
+      "explanation": "20%. Variance scales linearly with time, so standard deviation scales with \u221atime: 10%\u00d7\u221a4 = 20%.",
       "estimated_time": 120
     },
     {
@@ -2079,10 +1833,16 @@ const QUESTIONS_DB = {
         "forward-rates",
         "fixed-income"
       ],
-      "type": "numerical",
+      "type": "multiple_choice",
       "correct_answer": "Approximately 20% per annum",
       "explanation": "Approximately 20% per annum.",
-      "estimated_time": 90
+      "estimated_time": 90,
+      "options": [
+        "Approximately 20% per annum",
+        "Not applicable",
+        "Cannot determine",
+        "Insufficient information"
+      ]
     },
     {
       "id": "Q3.4",
@@ -2098,12 +1858,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Yield is YTM based on current price",
       "explanation": "Yield is YTM based on current price. Rate of return is actual realized return over holding period, including capital gains.",
-      "estimated_time": 120,
+      "estimated_time": 60,
       "options": [
-        "Depends on market conditions",
-        "No direct relationship",
-        "Always true in all cases",
-        "Yield is YTM based on current price"
+        "Yield is YTM based on current price",
+        "Sometimes true, sometimes false",
+        "Cannot be determined without additional information",
+        "It's impossible to determine"
       ]
     },
     {
@@ -2120,12 +1880,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Chaos theory studies deterministic systems with sensitive dependence on initial conditions",
       "explanation": "Chaos theory studies deterministic systems with sensitive dependence on initial conditions. Not useful for stock prediction - markets are too noisy.",
-      "estimated_time": 180,
+      "estimated_time": 120,
       "options": [
-        "It's impossible to determine",
+        "Depends on market conditions",
         "None of the above",
         "Chaos theory studies deterministic systems with sensitive dependence on initial conditions",
-        "Cannot be determined without additional information"
+        "Insufficient information provided"
       ]
     },
     {
@@ -2142,12 +1902,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Curve is downward sloping and convex up",
       "explanation": "Curve is downward sloping and convex up. Convexity arises from nonlinear relationship between price and yield in PV formula.",
-      "estimated_time": 120,
+      "estimated_time": 60,
       "options": [
-        "Always true in all cases",
         "Curve is downward sloping and convex up",
-        "Cannot be determined without additional information",
-        "They are equal"
+        "None of the above",
+        "Never true",
+        "Depends on market conditions"
       ]
     },
     {
@@ -2155,7 +1915,7 @@ const QUESTIONS_DB = {
       "chapter": 3,
       "category": "Other Financial Economics",
       "difficulty": "Medium",
-      "question": "CAPM suggests plot of E(r) vs β should be upward sloping line through (0,rf) and [1,E(rm)] - the SML. Suppose plotting average returns vs estimated betas gives something else. Which is most likely: (1) upward sloping curve starting at (0,rf), wholly above theoretical SML, initially steeper then parallel, or (2) upward sloping curve starting at (0,rf), wholly below theoretical SML, initially less steep then parallel? Which CAPM assumptions are violated?",
+      "question": "CAPM suggests plot of E(r) vs \u03b2 should be upward sloping line through (0,rf) and [1,E(rm)] - the SML. Suppose plotting average returns vs estimated betas gives something else. Which is most likely: (1) upward sloping curve starting at (0,rf), wholly above theoretical SML, initially steeper then parallel, or (2) upward sloping curve starting at (0,rf), wholly below theoretical SML, initially less steep then parallel? Which CAPM assumptions are violated?",
       "tags": [
         "CAPM",
         "SML",
@@ -2164,12 +1924,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Scenario (1) more likely",
       "explanation": "Scenario (1) more likely. Violation: discrete trading periods and leverage constraints. Low-beta stocks outperform CAPM prediction.",
-      "estimated_time": 120,
+      "estimated_time": 180,
       "options": [
-        "None of the above",
+        "Scenario (1) less likely",
         "Scenario (1) more likely",
-        "They are equal",
-        "Scenario (1) less likely"
+        "Never true",
+        "They are equal"
       ]
     },
     {
@@ -2183,16 +1943,10 @@ const QUESTIONS_DB = {
         "forward-rates",
         "fixed-income"
       ],
-      "type": "multiple_choice",
+      "type": "numerical",
       "correct_answer": "Approximately 8",
       "explanation": "Approximately 8.05% per annum.",
-      "estimated_time": 60,
-      "options": [
-        "Approximately 8",
-        "Not applicable",
-        "Cannot determine",
-        "Insufficient information"
-      ]
+      "estimated_time": 90
     },
     {
       "id": "Q3.9",
@@ -2206,14 +1960,14 @@ const QUESTIONS_DB = {
         "zero-coupon"
       ],
       "type": "multiple_choice",
-      "correct_answer": "(1) Premium (forward price < spot×(1+r)^T due to bond's positive return)",
-      "explanation": "(1) Premium (forward price < spot×(1+r)^T due to bond's positive return). (2) Still premium, more pronounced with coupons.",
+      "correct_answer": "(1) Premium (forward price < spot\u00d7(1+r)^T due to bond's positive return)",
+      "explanation": "(1) Premium (forward price < spot\u00d7(1+r)^T due to bond's positive return). (2) Still premium, more pronounced with coupons.",
       "estimated_time": 180,
       "options": [
-        "No direct relationship",
+        "They are equal",
         "Sometimes true, sometimes false",
-        "Depends on market conditions",
-        "(1) Premium (forward price < spot×(1+r)^T due to bond's positive return)"
+        "(1) Premium (forward price < spot\u00d7(1+r)^T due to bond's positive return)",
+        "Depends on market conditions"
       ]
     },
     {
@@ -2230,12 +1984,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Buy short-term bonds (price rises when rates fall) and sell/short long-term bonds (price falls when rates rise)",
       "explanation": "Buy short-term bonds (price rises when rates fall) and sell/short long-term bonds (price falls when rates rise).",
-      "estimated_time": 120,
+      "estimated_time": 180,
       "options": [
         "Buy short-term bonds (price rises when rates fall) and sell/short long-term bonds (price falls when rates rise)",
+        "They are equal",
         "Insufficient information provided",
-        "Always true in all cases",
-        "They are equal"
+        "Never true"
       ]
     },
     {
@@ -2250,16 +2004,10 @@ const QUESTIONS_DB = {
         "fixed-income",
         "risk-management"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 180,
-      "options": [
-        "Never true",
-        "Yes, always possible",
-        "Answer not provided",
-        "Sometimes true, sometimes false"
-      ]
+      "estimated_time": 120
     },
     {
       "id": "Q3.12",
@@ -2274,14 +2022,14 @@ const QUESTIONS_DB = {
         "econometrics"
       ],
       "type": "multiple_choice",
-      "correct_answer": "σ²ₜ = ω + α(εₜ₋₁)² + β(σ²ₜ₋₁)",
-      "explanation": "σ²ₜ = ω + α(εₜ₋₁)² + β(σ²ₜ₋₁). Volatility clustering model where today's variance depends on yesterday's shock and variance.",
+      "correct_answer": "\u03c3\u00b2\u209c = \u03c9 + \u03b1(\u03b5\u209c\u208b\u2081)\u00b2 + \u03b2(\u03c3\u00b2\u209c\u208b\u2081)",
+      "explanation": "\u03c3\u00b2\u209c = \u03c9 + \u03b1(\u03b5\u209c\u208b\u2081)\u00b2 + \u03b2(\u03c3\u00b2\u209c\u208b\u2081). Volatility clustering model where today's variance depends on yesterday's shock and variance.",
       "estimated_time": 300,
       "options": [
-        "Sometimes true, sometimes false",
-        "Insufficient information provided",
-        "None of the above",
-        "σ²ₜ = ω + α(εₜ₋₁)² + β(σ²ₜ₋₁)"
+        "Never true",
+        "Always true in all cases",
+        "\u03c3\u00b2\u209c = \u03c9 + \u03b1(\u03b5\u209c\u208b\u2081)\u00b2 + \u03b2(\u03c3\u00b2\u209c\u208b\u2081)",
+        "None of the above"
       ]
     },
     {
@@ -2312,16 +2060,10 @@ const QUESTIONS_DB = {
         "fixed-income",
         "emerging-markets"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 240,
-      "options": [
-        "Insufficient information provided",
-        "Always true in all cases",
-        "Answer not provided",
-        "Yes, always possible"
-      ]
+      "estimated_time": 240
     },
     {
       "id": "Q3.15",
@@ -2335,16 +2077,10 @@ const QUESTIONS_DB = {
         "credit-spreads",
         "fixed-income"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 300,
-      "options": [
-        "Cannot be determined without additional information",
-        "Answer not provided",
-        "None of the above",
-        "Yes, always possible"
-      ]
+      "estimated_time": 360
     },
     {
       "id": "Q3.16",
@@ -2357,10 +2093,16 @@ const QUESTIONS_DB = {
         "forward-rates",
         "compounding"
       ],
-      "type": "numerical",
+      "type": "multiple_choice",
       "correct_answer": "Compounding effect",
       "explanation": "Compounding effect. You're compounding at 15% for 10 years vs 10% for 5 years. The last 5 years need higher than 20% to make up for compounding.",
-      "estimated_time": 180
+      "estimated_time": 180,
+      "options": [
+        "Compounding effect",
+        "Not applicable",
+        "Cannot determine",
+        "Insufficient information"
+      ]
     },
     {
       "id": "Q3.17",
@@ -2375,8 +2117,8 @@ const QUESTIONS_DB = {
       ],
       "type": "multiple_choice",
       "correct_answer": "Calculate expected payoff: 0",
-      "explanation": "Calculate expected payoff: 0.5×(PV of $7 in 18 months) - 0.5×$2. Need to interpolate 18-month rate.",
-      "estimated_time": 90,
+      "explanation": "Calculate expected payoff: 0.5\u00d7(PV of $7 in 18 months) - 0.5\u00d7$2. Need to interpolate 18-month rate.",
+      "estimated_time": 60,
       "options": [
         "Calculate expected payoff: 0",
         "Not applicable",
@@ -2398,11 +2140,11 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Trading volume likely decreases",
       "explanation": "Trading volume likely decreases. Adverse selection problem - everyone fears trading with the informed trader.",
-      "estimated_time": 240,
+      "estimated_time": 120,
       "options": [
-        "It's impossible to determine",
-        "Sometimes true, sometimes false",
-        "Always true in all cases",
+        "Insufficient information provided",
+        "Depends on market conditions",
+        "Cannot be determined without additional information",
         "Trading volume likely decreases"
       ]
     },
@@ -2417,16 +2159,10 @@ const QUESTIONS_DB = {
         "probability",
         "dice"
       ],
-      "type": "multiple_choice",
+      "type": "numerical",
       "correct_answer": "$3",
       "explanation": "$3.50. Expected value = (1+2+3+4+5+6)/6 = 21/6 = 3.50.",
-      "estimated_time": 90,
-      "options": [
-        "2.4",
-        "$3",
-        "4.8",
-        "3.9"
-      ]
+      "estimated_time": 60
     },
     {
       "id": "Q4.2",
@@ -2439,16 +2175,10 @@ const QUESTIONS_DB = {
         "expected-value",
         "strategy"
       ],
-      "type": "multiple_choice",
-      "correct_answer": "Stop on first roll if ≥5, stop on second roll if ≥4, otherwise take third roll",
-      "explanation": "Stop on first roll if ≥5, stop on second roll if ≥4, otherwise take third roll. Expected payoff ≈ 4.67.",
-      "estimated_time": 120,
-      "options": [
-        "Cannot be determined without additional information",
-        "Stop on first roll if ≥5, stop on second roll if ≥4, otherwise take third roll",
-        "Insufficient information provided",
-        "Depends on market conditions"
-      ]
+      "type": "free_response",
+      "correct_answer": "Stop on first roll if \u22655, stop on second roll if \u22654, otherwise take third roll",
+      "explanation": "Stop on first roll if \u22655, stop on second roll if \u22654, otherwise take third roll. Expected payoff \u2248 4.67.",
+      "estimated_time": 180
     },
     {
       "id": "Q4.3",
@@ -2466,9 +2196,9 @@ const QUESTIONS_DB = {
       "explanation": "Exchange Paradox. Careful analysis of probabilities and priors needed. Without peek, no reason to switch.",
       "estimated_time": 240,
       "options": [
-        "Cannot be determined without additional information",
+        "Sometimes true, sometimes false",
+        "They are equal",
         "Always true in all cases",
-        "It's impossible to determine",
         "Exchange Paradox"
       ]
     },
@@ -2483,16 +2213,10 @@ const QUESTIONS_DB = {
         "martingale",
         "betting-strategy"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 360,
-      "options": [
-        "No direct relationship",
-        "Answer not provided",
-        "Never true",
-        "Yes, always possible"
-      ]
+      "estimated_time": 360
     },
     {
       "id": "Q4.5",
@@ -2506,14 +2230,14 @@ const QUESTIONS_DB = {
         "geometric-distribution"
       ],
       "type": "multiple_choice",
-      "correct_answer": "Expected payoff = Σ(k=2 to 6) k×P(first non-1 is k) = Σ(k=2 to 6) k×(1/6)/(5/6) = 4",
-      "explanation": "Expected payoff = Σ(k=2 to 6) k×P(first non-1 is k) = Σ(k=2 to 6) k×(1/6)/(5/6) = 4.",
-      "estimated_time": 120,
+      "correct_answer": "Expected payoff = \u03a3(k=2 to 6) k\u00d7P(first non-1 is k) = \u03a3(k=2 to 6) k\u00d7(1/6)/(5/6) = 4",
+      "explanation": "Expected payoff = \u03a3(k=2 to 6) k\u00d7P(first non-1 is k) = \u03a3(k=2 to 6) k\u00d7(1/6)/(5/6) = 4.",
+      "estimated_time": 180,
       "options": [
-        "It's impossible to determine",
-        "No direct relationship",
-        "Expected payoff = Σ(k=2 to 6) k×P(first non-1 is k) = Σ(k=2 to 6) k×(1/6)/(5/6) = 4",
-        "Yes, always possible"
+        "Never true",
+        "Expected payoff = \u03a3(k=2 to 6) k\u00d7P(first non-1 is k) = \u03a3(k=2 to 6) k\u00d7(1/6)/(5/6) = 4",
+        "Yes, always possible",
+        "They are equal"
       ]
     },
     {
@@ -2528,14 +2252,14 @@ const QUESTIONS_DB = {
         "cards"
       ],
       "type": "multiple_choice",
-      "correct_answer": "C(4,2)/C(52,2) = 6/1326 = 1/221 ≈ 0",
-      "explanation": "C(4,2)/C(52,2) = 6/1326 = 1/221 ≈ 0.0045",
+      "correct_answer": "C(4,2)/C(52,2) = 6/1326 = 1/221 \u2248 0",
+      "explanation": "C(4,2)/C(52,2) = 6/1326 = 1/221 \u2248 0.0045",
       "estimated_time": 90,
       "options": [
-        "Depends on market conditions",
-        "They are equal",
+        "Never true",
         "Insufficient information provided",
-        "C(4,2)/C(52,2) = 6/1326 = 1/221 ≈ 0"
+        "Depends on market conditions",
+        "C(4,2)/C(52,2) = 6/1326 = 1/221 \u2248 0"
       ]
     },
     {
@@ -2552,12 +2276,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Remove one coin from A",
       "explanation": "Remove one coin from A. By symmetry P(A>B) = P(B>A) with n coins each. A's extra coin gives 50% chance of breaking ties. Answer: 1/2",
-      "estimated_time": 180,
+      "estimated_time": 120,
       "options": [
-        "Cannot be determined without additional information",
-        "Depends on market conditions",
+        "Sometimes true, sometimes false",
+        "Always true in all cases",
         "Remove one coin from A",
-        "No direct relationship"
+        "Depends on market conditions"
       ]
     },
     {
@@ -2574,12 +2298,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "By symmetry, P(you win) = P(dealer wins)",
       "explanation": "By symmetry, P(you win) = P(dealer wins). With ties possible, P(you win) = (1 - P(tie))/2 = (1 - 3/51)/2 = 8/17",
-      "estimated_time": 60,
+      "estimated_time": 120,
       "options": [
+        "Always true in all cases",
         "Sometimes true, sometimes false",
-        "No direct relationship",
         "By symmetry, P(you win) = P(dealer wins)",
-        "Always true in all cases"
+        "No direct relationship"
       ]
     },
     {
@@ -2593,16 +2317,10 @@ const QUESTIONS_DB = {
         "logic",
         "symmetry"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Only seats 1 and 100 matter",
       "explanation": "Only seats 1 and 100 matter. By symmetry, either seat 1 or 100 is taken first with equal probability. Answer: 1/2",
-      "estimated_time": 240,
-      "options": [
-        "Cannot be determined without additional information",
-        "Always true in all cases",
-        "Only seats 1 and 100 matter",
-        "They are equal"
-      ]
+      "estimated_time": 240
     },
     {
       "id": "Q4.10",
@@ -2617,13 +2335,13 @@ const QUESTIONS_DB = {
       ],
       "type": "multiple_choice",
       "correct_answer": "Start at any point, check if all others fit in clockwise semicircle",
-      "explanation": "Start at any point, check if all others fit in clockwise semicircle. These N events are mutually exclusive. Probability = N × (1/2)^(N-1) = N/2^(N-1)",
-      "estimated_time": 180,
+      "explanation": "Start at any point, check if all others fit in clockwise semicircle. These N events are mutually exclusive. Probability = N \u00d7 (1/2)^(N-1) = N/2^(N-1)",
+      "estimated_time": 120,
       "options": [
-        "Depends on market conditions",
-        "Start at any point, check if all others fit in clockwise semicircle",
         "None of the above",
-        "It's impossible to determine"
+        "Start at any point, check if all others fit in clockwise semicircle",
+        "Insufficient information provided",
+        "Always true in all cases"
       ]
     },
     {
@@ -2638,14 +2356,14 @@ const QUESTIONS_DB = {
         "combinations"
       ],
       "type": "multiple_choice",
-      "correct_answer": "Calculate P(all different) = 365×364×",
-      "explanation": "Calculate P(all different) = 365×364×...×(365-n+1)/365^n. Need this < 0.5. Answer: n = 23",
-      "estimated_time": 240,
+      "correct_answer": "Calculate P(all different) = 365\u00d7364\u00d7",
+      "explanation": "Calculate P(all different) = 365\u00d7364\u00d7...\u00d7(365-n+1)/365^n. Need this < 0.5. Answer: n = 23",
+      "estimated_time": 120,
       "options": [
-        "Never true",
-        "Calculate P(all different) = 365×364×",
+        "Insufficient information provided",
+        "Calculate P(all different) = 365\u00d7364\u00d7",
         "Depends on market conditions",
-        "Sometimes true, sometimes false"
+        "No direct relationship"
       ]
     },
     {
@@ -2661,12 +2379,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Sample space with at least one boy: {(b,b), (b,g), (g,b)}",
       "explanation": "Sample space with at least one boy: {(b,b), (b,g), (g,b)}. P(both boys | at least one boy) = 1/3",
-      "estimated_time": 120,
+      "estimated_time": 240,
       "options": [
-        "They are equal",
         "Sample space with at least one boy: {(b,b), (b,g), (g,b)}",
-        "Insufficient information provided",
-        "Cannot be determined without additional information"
+        "No direct relationship",
+        "None of the above",
+        "It's impossible to determine"
       ]
     },
     {
@@ -2682,13 +2400,13 @@ const QUESTIONS_DB = {
       ],
       "type": "multiple_choice",
       "correct_answer": "Mean = 3",
-      "explanation": "Mean = 3. Variance = [(1-3)²+(2-3)²+(3-3)²+(4-3)²+(5-3)²]/5 = 10/5 = 2. StdDev = √2 ≈ 1.414.",
+      "explanation": "Mean = 3. Variance = [(1-3)\u00b2+(2-3)\u00b2+(3-3)\u00b2+(4-3)\u00b2+(5-3)\u00b2]/5 = 10/5 = 2. StdDev = \u221a2 \u2248 1.414.",
       "estimated_time": 90,
       "options": [
-        "They are equal",
+        "No direct relationship",
+        "None of the above",
         "Mean = 3",
-        "Sometimes true, sometimes false",
-        "Cannot be determined without additional information"
+        "Always true in all cases"
       ]
     },
     {
@@ -2702,16 +2420,10 @@ const QUESTIONS_DB = {
         "conditional-probability",
         "game-theory"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Spin again! Not spinning: 1/4 chance of death (only 4 possible positions, 1 is fatal)",
       "explanation": "Spin again! Not spinning: 1/4 chance of death (only 4 possible positions, 1 is fatal). Spinning: 2/6 = 1/3 chance.",
-      "estimated_time": 180,
-      "options": [
-        "They are equal",
-        "Depends on market conditions",
-        "Spin again! Not spinning: 1/4 chance of death (only 4 possible positions, 1 is fatal)",
-        "No, it's impossible"
-      ]
+      "estimated_time": 240
     },
     {
       "id": "Q4.15",
@@ -2725,13 +2437,13 @@ const QUESTIONS_DB = {
       ],
       "type": "multiple_choice",
       "correct_answer": "Use Bayes' theorem",
-      "explanation": "Use Bayes' theorem. P(2-headed|10 heads) = P(10 heads|2-headed)×P(2-headed)/P(10 heads) ≈ 0.506",
+      "explanation": "Use Bayes' theorem. P(2-headed|10 heads) = P(10 heads|2-headed)\u00d7P(2-headed)/P(10 heads) \u2248 0.506",
       "estimated_time": 240,
       "options": [
-        "No, it's impossible",
         "Use Bayes' theorem",
         "Depends on market conditions",
-        "No direct relationship"
+        "Always true in all cases",
+        "No, it's impossible"
       ]
     },
     {
@@ -2745,16 +2457,10 @@ const QUESTIONS_DB = {
         "conditional-probability",
         "game-theory"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "1/2",
       "explanation": "1/2. Can enumerate all scenarios or use symmetry argument.",
-      "estimated_time": 120,
-      "options": [
-        "None of the above",
-        "Never true",
-        "1/2",
-        "Depends on market conditions"
-      ]
+      "estimated_time": 120
     },
     {
       "id": "Q4.17",
@@ -2767,16 +2473,10 @@ const QUESTIONS_DB = {
         "Nash-equilibrium",
         "strategy"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Depends on specific payoff structure",
       "explanation": "Depends on specific payoff structure. Look for dominant strategies or mixed strategy Nash equilibria.",
-      "estimated_time": 120,
-      "options": [
-        "No direct relationship",
-        "Always true in all cases",
-        "None of the above",
-        "Depends on specific payoff structure"
-      ]
+      "estimated_time": 240
     },
     {
       "id": "Q4.18",
@@ -2791,12 +2491,12 @@ const QUESTIONS_DB = {
       ],
       "type": "multiple_choice",
       "correct_answer": "Let X, Y be arrival times",
-      "explanation": "Let X, Y be arrival times. They meet if |X-Y| ≤ 5. Draw region on 60×60 square. P = (60² - 2×(1/2×55²))/60² = 23/144",
-      "estimated_time": 90,
+      "explanation": "Let X, Y be arrival times. They meet if |X-Y| \u2264 5. Draw region on 60\u00d760 square. P = (60\u00b2 - 2\u00d7(1/2\u00d755\u00b2))/60\u00b2 = 23/144",
+      "estimated_time": 120,
       "options": [
-        "No direct relationship",
-        "None of the above",
+        "It's impossible to determine",
         "Let X, Y be arrival times",
+        "Never true",
         "Insufficient information provided"
       ]
     },
@@ -2814,12 +2514,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Let cuts be at x and y on [0,1]",
       "explanation": "Let cuts be at x and y on [0,1]. Need all three pieces < 1/2. This forms two triangular regions. P = 1/4",
-      "estimated_time": 180,
+      "estimated_time": 240,
       "options": [
         "Let cuts be at x and y on [0,1]",
-        "Insufficient information provided",
-        "Always true in all cases",
-        "Never true"
+        "None of the above",
+        "No direct relationship",
+        "Insufficient information provided"
       ]
     },
     {
@@ -2836,12 +2536,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Use recursion: E[f(n)] = 1/(2n-1) + E[f(n-1)]",
       "explanation": "Use recursion: E[f(n)] = 1/(2n-1) + E[f(n-1)]. Answer: E[f(100)] = 1 + 1/3 + 1/5 + ... + 1/199",
-      "estimated_time": 120,
+      "estimated_time": 240,
       "options": [
         "Use recursion: E[f(n)] = 1/(2n-1) + E[f(n-1)]",
-        "Sometimes true, sometimes false",
+        "No direct relationship",
         "It's impossible to determine",
-        "Insufficient information provided"
+        "They are equal"
       ]
     },
     {
@@ -2849,21 +2549,21 @@ const QUESTIONS_DB = {
       "chapter": 4,
       "category": "Statistics",
       "difficulty": "Medium",
-      "question": "Buses arrive at a station according to a Poisson process with average 10-minute intervals (λ=0.1/min). You arrive at random. What's your expected waiting time?",
+      "question": "Buses arrive at a station according to a Poisson process with average 10-minute intervals (\u03bb=0.1/min). You arrive at random. What's your expected waiting time?",
       "tags": [
         "Poisson-process",
         "exponential-distribution",
         "memoryless"
       ],
       "type": "multiple_choice",
-      "correct_answer": "By memoryless property of exponential distribution, expected wait = 1/λ = 10 minutes (same as mean inter-arrival time)",
-      "explanation": "By memoryless property of exponential distribution, expected wait = 1/λ = 10 minutes (same as mean inter-arrival time)",
+      "correct_answer": "By memoryless property of exponential distribution, expected wait = 1/\u03bb = 10 minutes (same as mean inter-arrival time)",
+      "explanation": "By memoryless property of exponential distribution, expected wait = 1/\u03bb = 10 minutes (same as mean inter-arrival time)",
       "estimated_time": 240,
       "options": [
         "Sometimes true, sometimes false",
-        "By memoryless property of exponential distribution, expected wait = 1/λ = 10 minutes (same as mean inter-arrival time)",
-        "No direct relationship",
-        "Always true in all cases"
+        "Cannot be determined without additional information",
+        "By memoryless property of exponential distribution, expected wait = 1/\u03bb = 10 minutes (same as mean inter-arrival time)",
+        "No direct relationship"
       ]
     },
     {
@@ -2878,14 +2578,14 @@ const QUESTIONS_DB = {
         "conditional-expectation"
       ],
       "type": "multiple_choice",
-      "correct_answer": "E[X|X>0] = ∫[0 to ∞] x·(1/√(2π))·e^(-x²/2)dx / (1/2) = √(2/π)",
-      "explanation": "E[X|X>0] = ∫[0 to ∞] x·(1/√(2π))·e^(-x²/2)dx / (1/2) = √(2/π)",
+      "correct_answer": "E[X|X>0] = \u222b[0 to \u221e] x\u00b7(1/\u221a(2\u03c0))\u00b7e^(-x\u00b2/2)dx / (1/2) = \u221a(2/\u03c0)",
+      "explanation": "E[X|X>0] = \u222b[0 to \u221e] x\u00b7(1/\u221a(2\u03c0))\u00b7e^(-x\u00b2/2)dx / (1/2) = \u221a(2/\u03c0)",
       "estimated_time": 240,
       "options": [
-        "Cannot be determined without additional information",
-        "None of the above",
-        "It's impossible to determine",
-        "E[X|X>0] = ∫[0 to ∞] x·(1/√(2π))·e^(-x²/2)dx / (1/2) = √(2/π)"
+        "Never true",
+        "They are equal",
+        "E[X|X>0] = \u222b[0 to \u221e] x\u00b7(1/\u221a(2\u03c0))\u00b7e^(-x\u00b2/2)dx / (1/2) = \u221a(2/\u03c0)",
+        "Depends on market conditions"
       ]
     },
     {
@@ -2902,12 +2602,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Use Markov chain with states S, H, HH, HHH",
       "explanation": "Use Markov chain with states S, H, HH, HHH. Set up equations for expected time to absorption. E[S] = 14",
-      "estimated_time": 240,
+      "estimated_time": 180,
       "options": [
-        "Depends on market conditions",
-        "None of the above",
-        "Use Markov chain with states S, H, HH, HHH",
-        "Insufficient information provided"
+        "Always true in all cases",
+        "They are equal",
+        "Insufficient information provided",
+        "Use Markov chain with states S, H, HH, HHH"
       ]
     },
     {
@@ -2924,12 +2624,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Use Markov chain",
       "explanation": "Use Markov chain. Key insight: once a T occurs before HHH, you'll always get THH first (since THH ends with HH). P(HHH first) = 1/8",
-      "estimated_time": 360,
+      "estimated_time": 240,
       "options": [
-        "They are equal",
-        "Depends on market conditions",
-        "Never true",
-        "Use Markov chain"
+        "Use Markov chain",
+        "Cannot be determined without additional information",
+        "Insufficient information provided",
+        "Always true in all cases"
       ]
     },
     {
@@ -2944,14 +2644,14 @@ const QUESTIONS_DB = {
         "boundary-conditions"
       ],
       "type": "multiple_choice",
-      "correct_answer": "Set up recursion: P_i = p·P_(i+1) + q·P_(i-1) with P_0=0, P_N=1",
-      "explanation": "Set up recursion: P_i = p·P_(i+1) + q·P_(i-1) with P_0=0, P_N=1. If p≠1/2: P_i = (1-(q/p)^i)/(1-(q/p)^N). If p=1/2: P_i = i/N",
-      "estimated_time": 360,
+      "correct_answer": "Set up recursion: P_i = p\u00b7P_(i+1) + q\u00b7P_(i-1) with P_0=0, P_N=1",
+      "explanation": "Set up recursion: P_i = p\u00b7P_(i+1) + q\u00b7P_(i-1) with P_0=0, P_N=1. If p\u22601/2: P_i = (1-(q/p)^i)/(1-(q/p)^N). If p=1/2: P_i = i/N",
+      "estimated_time": 240,
       "options": [
         "No direct relationship",
-        "Set up recursion: P_i = p·P_(i+1) + q·P_(i-1) with P_0=0, P_N=1",
-        "Depends on market conditions",
-        "Insufficient information provided"
+        "Always true in all cases",
+        "It's impossible to determine",
+        "Set up recursion: P_i = p\u00b7P_(i+1) + q\u00b7P_(i-1) with P_0=0, P_N=1"
       ]
     },
     {
@@ -2967,13 +2667,13 @@ const QUESTIONS_DB = {
       ],
       "type": "multiple_choice",
       "correct_answer": "Set origin at 17th meter",
-      "explanation": "Set origin at 17th meter. Need to reach 83 before -17. For symmetric random walk: P(reach a) = β/(α+β) = 17/100 = 0.17",
-      "estimated_time": 180,
+      "explanation": "Set origin at 17th meter. Need to reach 83 before -17. For symmetric random walk: P(reach a) = \u03b2/(\u03b1+\u03b2) = 17/100 = 0.17",
+      "estimated_time": 240,
       "options": [
-        "Depends on market conditions",
-        "Never true",
+        "They are equal",
+        "It's impossible to determine",
         "Set origin at 17th meter",
-        "Sometimes true, sometimes false"
+        "No direct relationship"
       ]
     },
     {
@@ -2989,13 +2689,13 @@ const QUESTIONS_DB = {
       ],
       "type": "multiple_choice",
       "correct_answer": "B_1 ~ N(0,1) and (B_2-B_1) ~ N(0,1) independently",
-      "explanation": "B_1 ~ N(0,1) and (B_2-B_1) ~ N(0,1) independently. P = P(B_1>0)·P(B_2-B_1<-B_1)·P(|B_2-B_1|>|B_1|) = 1/8",
-      "estimated_time": 240,
+      "explanation": "B_1 ~ N(0,1) and (B_2-B_1) ~ N(0,1) independently. P = P(B_1>0)\u00b7P(B_2-B_1<-B_1)\u00b7P(|B_2-B_1|>|B_1|) = 1/8",
+      "estimated_time": 360,
       "options": [
         "Never true",
-        "B_1 ~ N(0,1) and (B_2-B_1) ~ N(0,1) independently",
+        "None of the above",
         "Always true in all cases",
-        "It's impossible to determine"
+        "B_1 ~ N(0,1) and (B_2-B_1) ~ N(0,1) independently"
       ]
     },
     {
@@ -3003,21 +2703,21 @@ const QUESTIONS_DB = {
       "chapter": 5,
       "category": "Stochastic Processes",
       "difficulty": "Medium",
-      "question": "For Brownian motion W(t), what is E[∫[0 to T] W(t)dt]?",
+      "question": "For Brownian motion W(t), what is E[\u222b[0 to T] W(t)dt]?",
       "tags": [
         "Brownian-motion",
         "stochastic-calculus",
         "Ito-integral"
       ],
       "type": "multiple_choice",
-      "correct_answer": "This is normally distributed with mean 0 and variance T³/3",
-      "explanation": "This is normally distributed with mean 0 and variance T³/3",
+      "correct_answer": "This is normally distributed with mean 0 and variance T\u00b3/3",
+      "explanation": "This is normally distributed with mean 0 and variance T\u00b3/3",
       "estimated_time": 120,
       "options": [
-        "This is normally distributed with mean 0 and variance T³/3",
+        "This is normally distributed with mean 0 and variance T\u00b3/3",
+        "Never true",
         "Yes, always possible",
-        "They are equal",
-        "Sometimes true, sometimes false"
+        "They are equal"
       ]
     },
     {
@@ -3025,21 +2725,21 @@ const QUESTIONS_DB = {
       "chapter": 5,
       "category": "Stochastic Processes",
       "difficulty": "Hard",
-      "question": "For Brownian motion, what can you say about ∫[0 to T] W(t)dW(t)?",
+      "question": "For Brownian motion, what can you say about \u222b[0 to T] W(t)dW(t)?",
       "tags": [
         "stochastic-calculus",
         "Ito-lemma",
         "Brownian-motion"
       ],
       "type": "multiple_choice",
-      "correct_answer": "By Ito's lemma: ∫[0 to T] W(t)dW(t) = [W(T)² - T]/2",
-      "explanation": "By Ito's lemma: ∫[0 to T] W(t)dW(t) = [W(T)² - T]/2",
+      "correct_answer": "By Ito's lemma: \u222b[0 to T] W(t)dW(t) = [W(T)\u00b2 - T]/2",
+      "explanation": "By Ito's lemma: \u222b[0 to T] W(t)dW(t) = [W(T)\u00b2 - T]/2",
       "estimated_time": 240,
       "options": [
         "Sometimes true, sometimes false",
         "Cannot be determined without additional information",
-        "By Ito's lemma: ∫[0 to T] W(t)dW(t) = [W(T)² - T]/2",
-        "Never true"
+        "By Ito's lemma: \u222b[0 to T] W(t)dW(t) = [W(T)\u00b2 - T]/2",
+        "It's impossible to determine"
       ]
     },
     {
@@ -3055,13 +2755,13 @@ const QUESTIONS_DB = {
       ],
       "type": "multiple_choice",
       "correct_answer": "Use chain rule",
-      "explanation": "Use chain rule. y = 10x·ln(x), so dy/dx = 10(ln(x) + 1)",
+      "explanation": "Use chain rule. y = 10x\u00b7ln(x), so dy/dx = 10(ln(x) + 1)",
       "estimated_time": 180,
       "options": [
-        "Always true in all cases",
+        "No direct relationship",
+        "They are equal",
         "Use chain rule",
-        "Cannot be determined without additional information",
-        "It's impossible to determine"
+        "None of the above"
       ]
     },
     {
@@ -3069,22 +2769,16 @@ const QUESTIONS_DB = {
       "chapter": 5,
       "category": "Calculus & Linear Algebra",
       "difficulty": "Easy",
-      "question": "Without calculating numerical results, which is larger: e^π or π^e?",
+      "question": "Without calculating numerical results, which is larger: e^\u03c0 or \u03c0^e?",
       "tags": [
         "calculus",
         "comparison",
         "optimization"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Consider f(x) = ln(x)/x",
-      "explanation": "Consider f(x) = ln(x)/x. Show f'(x) < 0 for x > e, so f is decreasing. Since e < π, we have ln(e)/e > ln(π)/π, thus e^π > π^e.",
-      "estimated_time": 90,
-      "options": [
-        "Cannot be determined without additional information",
-        "Always true in all cases",
-        "Consider f(x) = ln(x)/x",
-        "They are equal"
-      ]
+      "explanation": "Consider f(x) = ln(x)/x. Show f'(x) < 0 for x > e, so f is decreasing. Since e < \u03c0, we have ln(e)/e > ln(\u03c0)/\u03c0, thus e^\u03c0 > \u03c0^e.",
+      "estimated_time": 120
     },
     {
       "id": "Q5.8",
@@ -3099,13 +2793,13 @@ const QUESTIONS_DB = {
       ],
       "type": "multiple_choice",
       "correct_answer": "Use integration by parts with u = ln(x) and dv = dx",
-      "explanation": "Use integration by parts with u = ln(x) and dv = dx. Result: ∫ln(x)dx = x·ln(x) - x + C",
+      "explanation": "Use integration by parts with u = ln(x) and dv = dx. Result: \u222bln(x)dx = x\u00b7ln(x) - x + C",
       "estimated_time": 180,
       "options": [
         "None of the above",
-        "It's impossible to determine",
         "Use integration by parts with u = ln(x) and dv = dx",
-        "Never true"
+        "Always true in all cases",
+        "It's impossible to determine"
       ]
     },
     {
@@ -3121,13 +2815,13 @@ const QUESTIONS_DB = {
       ],
       "type": "multiple_choice",
       "correct_answer": "Use cross-sectional area integration",
-      "explanation": "Use cross-sectional area integration. Cut perpendicular to z-axis gives a square. Volume = ∫[-1 to 1] 4(1-z²)dz = 16/3",
-      "estimated_time": 360,
+      "explanation": "Use cross-sectional area integration. Cut perpendicular to z-axis gives a square. Volume = \u222b[-1 to 1] 4(1-z\u00b2)dz = 16/3",
+      "estimated_time": 240,
       "options": [
-        "None of the above",
-        "No direct relationship",
-        "Use cross-sectional area integration",
-        "Insufficient information provided"
+        "Cannot be determined without additional information",
+        "They are equal",
+        "Depends on market conditions",
+        "Use cross-sectional area integration"
       ]
     },
     {
@@ -3142,14 +2836,14 @@ const QUESTIONS_DB = {
         "exponentials"
       ],
       "type": "multiple_choice",
-      "correct_answer": "Use Euler's formula: e^(iθ) = cos(θ) + i·sin(θ)",
-      "explanation": "Use Euler's formula: e^(iθ) = cos(θ) + i·sin(θ). When θ = π/2, e^(iπ/2) = i. Therefore ln(i) = iπ/2, and i^i = e^(i·ln(i)) = e^(-π/2) ≈ 0.208",
-      "estimated_time": 240,
+      "correct_answer": "Use Euler's formula: e^(i\u03b8) = cos(\u03b8) + i\u00b7sin(\u03b8)",
+      "explanation": "Use Euler's formula: e^(i\u03b8) = cos(\u03b8) + i\u00b7sin(\u03b8). When \u03b8 = \u03c0/2, e^(i\u03c0/2) = i. Therefore ln(i) = i\u03c0/2, and i^i = e^(i\u00b7ln(i)) = e^(-\u03c0/2) \u2248 0.208",
+      "estimated_time": 120,
       "options": [
-        "They are equal",
-        "Always true in all cases",
-        "Use Euler's formula: e^(iθ) = cos(θ) + i·sin(θ)",
-        "No direct relationship"
+        "No direct relationship",
+        "Use Euler's formula: e^(i\u03b8) = cos(\u03b8) + i\u00b7sin(\u03b8)",
+        "Depends on market conditions",
+        "Cannot be determined without additional information"
       ]
     },
     {
@@ -3164,14 +2858,14 @@ const QUESTIONS_DB = {
         "eigenvectors"
       ],
       "type": "multiple_choice",
-      "correct_answer": "det(A - λI) = 0 gives (2-λ)² - 1 = 0, so λ₁ = 3 and λ₂ = 1",
-      "explanation": "det(A - λI) = 0 gives (2-λ)² - 1 = 0, so λ₁ = 3 and λ₂ = 1. Eigenvectors: [1,1]ᵀ/√2 for λ=3 and [1,-1]ᵀ/√2 for λ=1",
-      "estimated_time": 240,
+      "correct_answer": "det(A - \u03bbI) = 0 gives (2-\u03bb)\u00b2 - 1 = 0, so \u03bb\u2081 = 3 and \u03bb\u2082 = 1",
+      "explanation": "det(A - \u03bbI) = 0 gives (2-\u03bb)\u00b2 - 1 = 0, so \u03bb\u2081 = 3 and \u03bb\u2082 = 1. Eigenvectors: [1,1]\u1d40/\u221a2 for \u03bb=3 and [1,-1]\u1d40/\u221a2 for \u03bb=1",
+      "estimated_time": 120,
       "options": [
-        "Always true in all cases",
+        "det(A - \u03bbI) = 0 gives (2-\u03bb)\u00b2 - 1 = 0, so \u03bb\u2081 = 3 and \u03bb\u2082 = 1",
         "They are equal",
-        "det(A - λI) = 0 gives (2-λ)² - 1 = 0, so λ₁ = 3 and λ₂ = 1",
-        "No direct relationship"
+        "Never true",
+        "None of the above"
       ]
     },
     {
@@ -3179,7 +2873,7 @@ const QUESTIONS_DB = {
       "chapter": 5,
       "category": "Calculus & Linear Algebra",
       "difficulty": "Medium",
-      "question": "Three random variables x, y, z have correlations ρ(x,y) = 0.8 and ρ(x,z) = 0.8. What are the maximum and minimum possible correlations between y and z?",
+      "question": "Three random variables x, y, z have correlations \u03c1(x,y) = 0.8 and \u03c1(x,z) = 0.8. What are the maximum and minimum possible correlations between y and z?",
       "tags": [
         "linear-algebra",
         "correlation",
@@ -3187,13 +2881,13 @@ const QUESTIONS_DB = {
       ],
       "type": "multiple_choice",
       "correct_answer": "Use positive semidefiniteness of correlation matrix",
-      "explanation": "Use positive semidefiniteness of correlation matrix. det(P) = 1 - 2(0.8)² + 2(0.8)²ρ(y,z) - ρ(y,z)² ≥ 0. Solving: 0.28 ≤ ρ(y,z) ≤ 1",
-      "estimated_time": 180,
+      "explanation": "Use positive semidefiniteness of correlation matrix. det(P) = 1 - 2(0.8)\u00b2 + 2(0.8)\u00b2\u03c1(y,z) - \u03c1(y,z)\u00b2 \u2265 0. Solving: 0.28 \u2264 \u03c1(y,z) \u2264 1",
+      "estimated_time": 240,
       "options": [
-        "Sometimes true, sometimes false",
         "Use positive semidefiniteness of correlation matrix",
-        "Never true",
-        "It's impossible to determine"
+        "Sometimes true, sometimes false",
+        "They are equal",
+        "None of the above"
       ]
     },
     {
@@ -3210,11 +2904,11 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Method 1: i=i+j; j=i-j; i=i-j",
       "explanation": "Method 1: i=i+j; j=i-j; i=i-j. Method 2: Use XOR: i=i^j; j=i^j; i=i^j",
-      "estimated_time": 60,
+      "estimated_time": 90,
       "options": [
-        "No direct relationship",
         "Method 1: i=i+j; j=i-j; i=i-j",
-        "Cannot be determined without additional information",
+        "No direct relationship",
+        "They are equal",
         "None of the above"
       ]
     },
@@ -3234,10 +2928,10 @@ const QUESTIONS_DB = {
       "explanation": "Iterate through array. Add element to result if it differs from previous element. Complexity: O(n)",
       "estimated_time": 90,
       "options": [
-        "Insufficient information provided",
+        "Cannot be determined without additional information",
+        "Depends on market conditions",
         "No direct relationship",
-        "Iterate through array",
-        "Never true"
+        "Iterate through array"
       ]
     },
     {
@@ -3252,14 +2946,14 @@ const QUESTIONS_DB = {
         "complexity"
       ],
       "type": "multiple_choice",
-      "correct_answer": "Insertion: O(n²) avg and worst",
-      "explanation": "Insertion: O(n²) avg and worst. Merge: O(n log n) all cases. Quicksort: O(n log n) avg, O(n²) worst. Merge uses divide-and-conquer.",
-      "estimated_time": 120,
+      "correct_answer": "Insertion: O(n\u00b2) avg and worst",
+      "explanation": "Insertion: O(n\u00b2) avg and worst. Merge: O(n log n) all cases. Quicksort: O(n log n) avg, O(n\u00b2) worst. Merge uses divide-and-conquer.",
+      "estimated_time": 180,
       "options": [
-        "Sometimes true, sometimes false",
-        "Insertion: O(n²) avg and worst",
-        "None of the above",
-        "Insufficient information provided"
+        "Cannot be determined without additional information",
+        "It's impossible to determine",
+        "Never true",
+        "Insertion: O(n\u00b2) avg and worst"
       ]
     },
     {
@@ -3278,10 +2972,10 @@ const QUESTIONS_DB = {
       "explanation": "Knuth shuffle: for i=1 to n, swap card[i] with card[random(i,n)]. Complexity: O(n). Alternatively: assign random numbers and sort.",
       "estimated_time": 240,
       "options": [
-        "No direct relationship",
+        "Knuth shuffle: for i=1 to n, swap card[i] with card[random(i,n)]",
         "They are equal",
-        "Cannot be determined without additional information",
-        "Knuth shuffle: for i=1 to n, swap card[i] with card[random(i,n)]"
+        "It's impossible to determine",
+        "Sometimes true, sometimes false"
       ]
     },
     {
@@ -3295,16 +2989,10 @@ const QUESTIONS_DB = {
         "optimization",
         "comparison"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Pair elements and compare within pairs (n/2)",
       "explanation": "Pair elements and compare within pairs (n/2). Put smaller in group A, larger in group B. Find min of A and max of B (each n/2-1). Total: 3n/2",
-      "estimated_time": 240,
-      "options": [
-        "Pair elements and compare within pairs (n/2)",
-        "Never true",
-        "No direct relationship",
-        "Depends on market conditions"
-      ]
+      "estimated_time": 360
     },
     {
       "id": "Q7.6",
@@ -3317,16 +3005,10 @@ const QUESTIONS_DB = {
         "dynamic-programming",
         "optimization"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Track running sum T and minimum sum Tmin seen so far",
       "explanation": "Track running sum T and minimum sum Tmin seen so far. Update Vmax = max(Vmax, T-Tmin). One pass: O(n)",
-      "estimated_time": 360,
-      "options": [
-        "None of the above",
-        "It's impossible to determine",
-        "They are equal",
-        "Track running sum T and minimum sum Tmin seen so far"
-      ]
+      "estimated_time": 240
     },
     {
       "id": "Q7.7",
@@ -3342,12 +3024,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Use bitwise AND: x & (x-1) == 0 if and only if x is a power of 2 (x has single bit set)",
       "explanation": "Use bitwise AND: x & (x-1) == 0 if and only if x is a power of 2 (x has single bit set)",
-      "estimated_time": 120,
+      "estimated_time": 180,
       "options": [
+        "Depends on market conditions",
+        "Insufficient information provided",
         "Use bitwise AND: x & (x-1) == 0 if and only if x is a power of 2 (x has single bit set)",
-        "None of the above",
-        "No direct relationship",
-        "It's impossible to determine"
+        "No direct relationship"
       ]
     },
     {
@@ -3366,10 +3048,10 @@ const QUESTIONS_DB = {
       "explanation": "Use binary encoding. Label bottles 0-999 in binary (10 bits). Mouse i drinks from all bottles with bit i set. Dead mice pattern identifies the bottle.",
       "estimated_time": 240,
       "options": [
-        "Sometimes true, sometimes false",
-        "Never true",
         "Use binary encoding",
-        "Insufficient information provided"
+        "Sometimes true, sometimes false",
+        "No direct relationship",
+        "They are equal"
       ]
     },
     {
@@ -3385,13 +3067,13 @@ const QUESTIONS_DB = {
       ],
       "type": "multiple_choice",
       "correct_answer": "Simulate many paths under risk-neutral measure",
-      "explanation": "Simulate many paths under risk-neutral measure. For delta/gamma: perturb spot by δS, run simulations for S-δS, S, S+δS. Delta ≈ (f(S+δS)-f(S-δS))/(2δS), Gamma ≈ ((f(S+δS)-f(S))-(f(S)-f(S-δS)))/(δS)²",
+      "explanation": "Simulate many paths under risk-neutral measure. For delta/gamma: perturb spot by \u03b4S, run simulations for S-\u03b4S, S, S+\u03b4S. Delta \u2248 (f(S+\u03b4S)-f(S-\u03b4S))/(2\u03b4S), Gamma \u2248 ((f(S+\u03b4S)-f(S))-(f(S)-f(S-\u03b4S)))/(\u03b4S)\u00b2",
       "estimated_time": 300,
       "options": [
-        "No direct relationship",
-        "Sometimes true, sometimes false",
         "Simulate many paths under risk-neutral measure",
-        "It's impossible to determine"
+        "Depends on market conditions",
+        "It's impossible to determine",
+        "Always true in all cases"
       ]
     },
     {
@@ -3405,16 +3087,10 @@ const QUESTIONS_DB = {
         "Monte-Carlo",
         "optimization"
       ],
-      "type": "multiple_choice",
-      "correct_answer": "Antithetic variables (use -ε after ε), moment matching (rescale to match moments), control variates (use known similar derivative), importance sampling (change measure)",
-      "explanation": "Antithetic variables (use -ε after ε), moment matching (rescale to match moments), control variates (use known similar derivative), importance sampling (change measure)",
-      "estimated_time": 240,
-      "options": [
-        "Cannot be determined without additional information",
-        "None of the above",
-        "Antithetic variables (use -ε after ε), moment matching (rescale to match moments), control variates (use known similar derivative), importance sampling (change measure)",
-        "Yes, always possible"
-      ]
+      "type": "free_response",
+      "correct_answer": "Antithetic variables (use -\u03b5 after \u03b5), moment matching (rescale to match moments), control variates (use known similar derivative), importance sampling (change measure)",
+      "explanation": "Antithetic variables (use -\u03b5 after \u03b5), moment matching (rescale to match moments), control variates (use known similar derivative), importance sampling (change measure)",
+      "estimated_time": 360
     },
     {
       "id": "Q6.1",
@@ -3427,16 +3103,10 @@ const QUESTIONS_DB = {
         "introduction",
         "self-presentation"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 120,
-      "options": [
-        "Cannot be determined without additional information",
-        "They are equal",
-        "Answer not provided",
-        "Yes, always possible"
-      ]
+      "estimated_time": 120
     },
     {
       "id": "Q6.2",
@@ -3449,16 +3119,10 @@ const QUESTIONS_DB = {
         "career-history",
         "communication"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 60,
-      "options": [
-        "Cannot be determined without additional information",
-        "Yes, always possible",
-        "Insufficient information provided",
-        "Answer not provided"
-      ]
+      "estimated_time": 60
     },
     {
       "id": "Q6.3",
@@ -3471,16 +3135,10 @@ const QUESTIONS_DB = {
         "strengths",
         "self-assessment"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 120,
-      "options": [
-        "It's impossible to determine",
-        "Insufficient information provided",
-        "Yes, always possible",
-        "Answer not provided"
-      ]
+      "estimated_time": 90
     },
     {
       "id": "Q6.4",
@@ -3493,16 +3151,10 @@ const QUESTIONS_DB = {
         "weaknesses",
         "self-awareness"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 60,
-      "options": [
-        "Answer not provided",
-        "None of the above",
-        "No direct relationship",
-        "Yes, always possible"
-      ]
+      "estimated_time": 90
     },
     {
       "id": "Q6.5",
@@ -3515,16 +3167,10 @@ const QUESTIONS_DB = {
         "motivation",
         "firm-specific"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 120,
-      "options": [
-        "Yes, always possible",
-        "Answer not provided",
-        "Sometimes true, sometimes false",
-        "It's impossible to determine"
-      ]
+      "estimated_time": 120
     },
     {
       "id": "Q6.6",
@@ -3540,12 +3186,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Know what a tombstone is (announcement of completed deal)",
       "explanation": "Know what a tombstone is (announcement of completed deal). Research the firm's recent deals before interview.",
-      "estimated_time": 180,
+      "estimated_time": 240,
       "options": [
-        "Yes, always possible",
+        "It's impossible to determine",
+        "Never true",
         "Know what a tombstone is (announcement of completed deal)",
-        "No direct relationship",
-        "Insufficient information provided"
+        "Yes, always possible"
       ]
     },
     {
@@ -3559,16 +3205,10 @@ const QUESTIONS_DB = {
         "career-goals",
         "role-specific"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 60,
-      "options": [
-        "Depends on market conditions",
-        "Answer not provided",
-        "Always true in all cases",
-        "Yes, always possible"
-      ]
+      "estimated_time": 120
     },
     {
       "id": "Q6.8",
@@ -3580,16 +3220,10 @@ const QUESTIONS_DB = {
         "industry-knowledge",
         "role-understanding"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 120,
-      "options": [
-        "Answer not provided",
-        "It's impossible to determine",
-        "Yes, always possible",
-        "Cannot be determined without additional information"
-      ]
+      "estimated_time": 60
     },
     {
       "id": "Q6.9",
@@ -3602,16 +3236,10 @@ const QUESTIONS_DB = {
         "indices",
         "forecasting"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 60,
-      "options": [
-        "Yes, always possible",
-        "Never true",
-        "Sometimes true, sometimes false",
-        "Answer not provided"
-      ]
+      "estimated_time": 120
     },
     {
       "id": "Q6.10",
@@ -3627,12 +3255,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "London InterBank Offer Rate - benchmark rate at which banks lend to each other",
       "explanation": "London InterBank Offer Rate - benchmark rate at which banks lend to each other. Know current 3-month and 6-month rates.",
-      "estimated_time": 90,
+      "estimated_time": 120,
       "options": [
+        "Never true",
         "London InterBank Offer Rate - benchmark rate at which banks lend to each other",
         "Depends on market conditions",
-        "They are equal",
-        "None of the above"
+        "Always true in all cases"
       ]
     },
     {
@@ -3649,12 +3277,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Monetary policy (central bank raises interest rates) and Fiscal policy (government reduces spending or raises taxes)",
       "explanation": "Monetary policy (central bank raises interest rates) and Fiscal policy (government reduces spending or raises taxes).",
-      "estimated_time": 180,
+      "estimated_time": 240,
       "options": [
-        "None of the above",
+        "No direct relationship",
+        "Monetary policy (central bank raises interest rates) and Fiscal policy (government reduces spending or raises taxes)",
         "They are equal",
-        "Sometimes true, sometimes false",
-        "Monetary policy (central bank raises interest rates) and Fiscal policy (government reduces spending or raises taxes)"
+        "Never true"
       ]
     },
     {
@@ -3668,16 +3296,10 @@ const QUESTIONS_DB = {
         "investment-thesis",
         "research"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 240,
-      "options": [
-        "Depends on market conditions",
-        "Insufficient information provided",
-        "Answer not provided",
-        "Yes, always possible"
-      ]
+      "estimated_time": 120
     },
     {
       "id": "Q6.13",
@@ -3692,12 +3314,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Strategy of buying 10 highest dividend-yielding stocks in Dow Jones Industrial Average, rebalancing annually",
       "explanation": "Strategy of buying 10 highest dividend-yielding stocks in Dow Jones Industrial Average, rebalancing annually.",
-      "estimated_time": 90,
+      "estimated_time": 120,
       "options": [
+        "Insufficient information provided",
         "Never true",
-        "Strategy of buying 10 highest dividend-yielding stocks in Dow Jones Industrial Average, rebalancing annually",
-        "It's impossible to determine",
-        "No direct relationship"
+        "They are equal",
+        "Strategy of buying 10 highest dividend-yielding stocks in Dow Jones Industrial Average, rebalancing annually"
       ]
     },
     {
@@ -3712,16 +3334,10 @@ const QUESTIONS_DB = {
         "multiples",
         "financial-analysis"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 120,
-      "options": [
-        "No direct relationship",
-        "Yes, always possible",
-        "Answer not provided",
-        "Sometimes true, sometimes false"
-      ]
+      "estimated_time": 120
     },
     {
       "id": "Q6.15",
@@ -3734,16 +3350,10 @@ const QUESTIONS_DB = {
         "theory",
         "risk-return"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Answer not provided",
       "explanation": "Explanation to be added.",
-      "estimated_time": 240,
-      "options": [
-        "Sometimes true, sometimes false",
-        "Yes, always possible",
-        "None of the above",
-        "Answer not provided"
-      ]
+      "estimated_time": 180
     },
     {
       "id": "Q6.16",
@@ -3759,12 +3369,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "When leased under operating lease (vs capital/finance lease)",
       "explanation": "When leased under operating lease (vs capital/finance lease). Under new accounting standards (IFRS 16/ASC 842), most leases now on balance sheet.",
-      "estimated_time": 120,
+      "estimated_time": 180,
       "options": [
-        "Never true",
-        "No direct relationship",
-        "They are equal",
-        "When leased under operating lease (vs capital/finance lease)"
+        "When leased under operating lease (vs capital/finance lease)",
+        "Cannot be determined without additional information",
+        "Sometimes true, sometimes false",
+        "They are equal"
       ]
     },
     {
@@ -3781,12 +3391,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "No",
       "explanation": "No. FCF is cash available to all capital providers (debt and equity) before financing decisions. Debt level doesn't affect FCF calculation.",
-      "estimated_time": 240,
+      "estimated_time": 120,
       "options": [
-        "Always true in all cases",
-        "Yes, always possible",
+        "No",
+        "None of the above",
         "Depends on market conditions",
-        "No"
+        "Yes, always possible"
       ]
     },
     {
@@ -3800,16 +3410,10 @@ const QUESTIONS_DB = {
         "fermi-problem",
         "reasoning"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "~14,000",
       "explanation": "~14,000. Show your reasoning: US population, frequency of visits, coverage patterns, etc.",
-      "estimated_time": 240,
-      "options": [
-        "10500",
-        "17500",
-        "~14,000",
-        "21000"
-      ]
+      "estimated_time": 120
     },
     {
       "id": "Q6.19",
@@ -3822,16 +3426,10 @@ const QUESTIONS_DB = {
         "problem-solving",
         "lateral-thinking"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Hold your breath until you turn blue/pass out",
       "explanation": "Hold your breath until you turn blue/pass out. Guard legally obligated to get medical help. In hospital, can request cigarette or have opportunity to escape.",
-      "estimated_time": 120,
-      "options": [
-        "Hold your breath until you turn blue/pass out",
-        "No direct relationship",
-        "Sometimes true, sometimes false",
-        "Cannot be determined without additional information"
-      ]
+      "estimated_time": 240
     },
     {
       "id": "Q6.20",
@@ -3847,7 +3445,7 @@ const QUESTIONS_DB = {
       "type": "numerical",
       "correct_answer": "50% (assuming fair coin)",
       "explanation": "50% (assuming fair coin). Coin tosses are independent. However, you should strongly suspect the coin is biased!",
-      "estimated_time": 120
+      "estimated_time": 90
     },
     {
       "id": "Q6.21",
@@ -3863,12 +3461,12 @@ const QUESTIONS_DB = {
       "type": "multiple_choice",
       "correct_answer": "Bernoulli's principle (airfoil shape creates pressure differential) combined with Newton's third law (deflection of air creates reaction force)",
       "explanation": "Bernoulli's principle (airfoil shape creates pressure differential) combined with Newton's third law (deflection of air creates reaction force).",
-      "estimated_time": 240,
+      "estimated_time": 120,
       "options": [
-        "No direct relationship",
+        "Insufficient information provided",
         "Bernoulli's principle (airfoil shape creates pressure differential) combined with Newton's third law (deflection of air creates reaction force)",
-        "They are equal",
-        "Yes, always possible"
+        "Yes, always possible",
+        "Depends on market conditions"
       ]
     },
     {
@@ -3882,19 +3480,14 @@ const QUESTIONS_DB = {
         "design",
         "lateral-thinking"
       ],
-      "type": "multiple_choice",
+      "type": "free_response",
       "correct_answer": "Can't fall through the hole (no diagonal smaller than diameter)",
       "explanation": "Can't fall through the hole (no diagonal smaller than diameter). Also: rolls easily, no need to align when replacing, no corners to wear.",
-      "estimated_time": 60,
-      "options": [
-        "Can't fall through the hole (no diagonal smaller than diameter)",
-        "Sometimes true, sometimes false",
-        "It's impossible to determine",
-        "Yes, always possible"
-      ]
+      "estimated_time": 90
     }
   ]
 };
+
 
 // Utility Functions
 const formatTime = (seconds) => {
@@ -3924,6 +3517,140 @@ const getCategoryIcon = (category) => {
     'Non-Quantitative': '💡'
   };
   return iconMap[category] || '🔹';
+};
+
+// OpenAI Answer Evaluator
+// OpenAI Answer Evaluator - UPDATED VERSION
+// OpenAI Answer Evaluator - UPDATED FOR LANGUAGE ANSWERS
+const evaluateAnswer = async (userAnswer, correctAnswer, question) => {
+  try {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY || "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"}`
+      },
+      body: JSON.stringify({
+        model: "gpt-4o",
+        messages: [
+          { 
+            role: "system",
+            content: "You are an expert evaluator for quantitative finance interview questions. You must respond ONLY with valid JSON, no other text. Be VERY GENEROUS when evaluating natural language answers - focus on whether the student understands the core concept, not whether they use the exact same words as the expected answer."
+          },
+          { 
+            role: "user", 
+            content: `Evaluate if a student's answer demonstrates understanding of the concept, even if worded completely differently from the expected answer.
+
+Question: ${question}
+
+Expected Answer: ${correctAnswer}
+
+Student's Answer: ${userAnswer}
+
+CRITICAL EVALUATION CRITERIA FOR NATURAL LANGUAGE ANSWERS:
+
+1. **Focus on CONCEPTUAL UNDERSTANDING, not exact wording**
+   - Does the student demonstrate they understand the core concept?
+   - Do they capture the essential idea, even in their own words?
+
+2. **Mathematical equivalence**
+   - "50%" = "0.5" = "1/2" = "half" = "one out of two" = "equal probability"
+   
+3. **Accept all valid phrasings**
+   - "You should go first" = "I would choose to go first" = "Going first is optimal"
+   - "The answer is X" = "X is the solution" = "You get X" = "The result is X"
+
+4. **Accept partial but correct explanations**
+   - If student explains the key idea but skips some details, still mark CORRECT
+   - Only mark incorrect if they fundamentally misunderstand the concept
+
+5. **Accept different valid approaches**
+   - Multiple solution methods may exist
+   - Different strategies can be equally valid
+   - Theoretical vs practical approaches both valid
+
+6. **Ignore minor issues**
+   - Typos, grammar, spelling
+   - Formatting differences
+   - Extra or missing punctuation
+   - Different level of detail
+
+7. **Accept shortened or expanded answers**
+   - Concise answers that capture the essence = CORRECT
+   - Detailed explanations with extra context = CORRECT
+   - As long as core concept is right, length doesn't matter
+
+8. **For strategy/explanation questions**
+   - Accept any logically sound strategy, even if different from expected
+   - Accept high-level overview or step-by-step details equally
+   - Focus on: "Would this work?" not "Is this exactly what we expected?"
+
+9. **For "why" questions**
+   - Accept any correct reasoning, even if explanation path differs
+   - Multiple valid explanations often exist
+   - Accept intuitive explanations vs technical explanations equally
+
+EXAMPLES OF WHAT TO ACCEPT:
+
+Question: "Why are manhole covers round?"
+Expected: "Can't fall through the hole (no diagonal smaller than diameter)"
+Student says: "Because a circle has no corners so it can't fall in" → CORRECT ✓
+Student says: "Round shape prevents it from falling through" → CORRECT ✓
+Student says: "The diameter is always the same" → CORRECT ✓
+Student says: "They're easier to roll" → PARTIALLY CORRECT (mention as additional benefit)
+
+Question: "What is your strategy to win?"
+Expected: "Go first, place in center, use symmetry"
+Student says: "I would start first and put my piece in the middle, then mirror opponent" → CORRECT ✓
+Student says: "First player advantage with center control and symmetric responses" → CORRECT ✓
+Student says: "Mirror strategy from center" → CORRECT ✓
+
+BE EXTREMELY GENEROUS. If the student shows they understand the concept, mark as CORRECT even if they:
+- Use different words
+- Give more or less detail
+- Approach from a different angle
+- Use informal language
+- Make minor errors in phrasing
+
+Only mark INCORRECT if they fundamentally misunderstand the concept or give a logically wrong answer.
+
+Respond with ONLY a JSON object in this EXACT format:
+{
+  "isCorrect": true or false,
+  "confidence": number between 0 and 1,
+  "feedback": "Brief explanation focusing on whether they understood the concept, not whether they matched the exact wording",
+  "keyPointsCovered": ["list", "of", "key", "concepts", "the", "student", "understood"],
+  "missingPoints": ["optional", "additional", "insights", "they", "could", "mention"]
+}`
+          }
+        ],
+        response_format: { type: "json_object" },
+        max_tokens: 1500,
+        temperature: 0.2
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`API request failed: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const evaluation = JSON.parse(data.choices[0].message.content);
+    return evaluation;
+  } catch (error) {
+    console.error("Error evaluating answer:", error);
+    const isMatch = userAnswer.toLowerCase().trim() === correctAnswer.toLowerCase().trim();
+    return {
+      isCorrect: isMatch,
+      confidence: isMatch ? 1.0 : 0.0,
+      feedback: isMatch 
+        ? "Exact match with expected answer." 
+        : "Could not evaluate with AI. Please check your answer manually.",
+      keyPointsCovered: [],
+      missingPoints: [],
+      error: true
+    };
+  }
 };
 
 export default function QuantPrepApp() {
@@ -4096,9 +3823,11 @@ export default function QuantPrepApp() {
     const [score, setScore] = useState(0);
     const [timeSpent, setTimeSpent] = useState(0);
     const [selectedDifficulty, setSelectedDifficulty] = useState(null);
-    const [showDifficultySelection, setShowDifficultySelection] = useState(true);
+    const [showDifficultySelection, setShowDifficultySelection] = useState(false);
     const [isPlayingAudio, setIsPlayingAudio] = useState(false);
     const [audioUrl, setAudioUrl] = useState(null);
+    const [isEvaluating, setIsEvaluating] = useState(false);
+    const [aiEvaluation, setAiEvaluation] = useState(null);
 
     useEffect(() => {
       let interval;
@@ -4118,18 +3847,15 @@ export default function QuantPrepApp() {
     const startSession = () => {
       let questions = [...QUESTIONS_DB.questions];
       
-      // Filter by selected difficulty if one was chosen
       if (selectedDifficulty) {
         questions = questions.filter(q => q.difficulty === selectedDifficulty);
       }
       
-      // Check if we have enough questions
       if (questions.length === 0) {
         alert('No questions available for this difficulty level.');
         return;
       }
       
-      // Randomly select 10 questions (or all if less than 10 available)
       const numQuestions = Math.min(10, questions.length);
       const shuffled = questions.sort(() => Math.random() - 0.5).slice(0, numQuestions);
       
@@ -4144,7 +3870,6 @@ export default function QuantPrepApp() {
       try {
         setIsPlayingAudio(true);
         
-        // Generate a more conversational explanation
         const voiceText = isCorrect 
           ? `Great job! That's correct. ${explanation}`
           : `Not quite right. Let me explain. ${explanation}`;
@@ -4187,12 +3912,24 @@ export default function QuantPrepApp() {
       }
     };
 
-    const submitAnswer = () => {
+    const submitAnswer = async () => {
       const currentQ = sessionQuestions[currentQuestionIndex];
-      const correct = selectedAnswer.toLowerCase().trim() === currentQ.correct_answer.toLowerCase().trim();
-      setIsCorrect(correct);
-      setShowFeedback(true);
-      if (correct) setScore(score + 1);
+      
+      if (currentQ.type === 'multiple_choice') {
+        const correct = selectedAnswer.toLowerCase().trim() === currentQ.correct_answer.toLowerCase().trim();
+        setIsCorrect(correct);
+        setShowFeedback(true);
+        if (correct) setScore(score + 1);
+      } else {
+        // Use AI evaluation for free response questions
+        setIsEvaluating(true);
+        const evaluation = await evaluateAnswer(selectedAnswer, currentQ.correct_answer, currentQ.question);
+        setAiEvaluation(evaluation);
+        setIsCorrect(evaluation.isCorrect);
+        setShowFeedback(true);
+        if (evaluation.isCorrect) setScore(score + 1);
+        setIsEvaluating(false);
+      }
     };
 
     const nextQuestion = () => {
@@ -4202,9 +3939,10 @@ export default function QuantPrepApp() {
         setShowFeedback(false);
         setIsCorrect(false);
         setAudioUrl(null);
+        setAiEvaluation(null);
       } else {
         setSessionStarted(false);
-        setShowDifficultySelection(true);
+        setShowDifficultySelection(false);
         setUserProgress(prev => ({
           ...prev,
           totalSolved: prev.totalSolved + sessionQuestions.length,
@@ -4213,6 +3951,49 @@ export default function QuantPrepApp() {
         }));
       }
     };
+
+    // Initial state - show when first arriving at Practice or after completing a session
+    if (!sessionStarted && !showDifficultySelection) {
+      return (
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10">
+            <h2 className="text-2xl font-bold text-white mb-6">Practice Session</h2>
+            
+            <div className="space-y-4 mb-6">
+              <div className="p-4 bg-purple-500/10 rounded-lg border border-purple-500/20">
+                <div className="flex items-center gap-3 mb-2">
+                  <Sparkles className="w-6 h-6 text-purple-400" />
+                  <div className="font-medium text-white">AI-Powered Answer Evaluation</div>
+                </div>
+                <div className="text-sm text-gray-400">
+                  Our intelligent system evaluates your free-text answers, understanding different phrasings and mathematical equivalents!
+                </div>
+              </div>
+              <div className="p-4 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                <div className="font-medium text-white mb-1">📝 10 Questions per Session</div>
+                <div className="text-sm text-gray-400">Randomly selected from your chosen difficulty</div>
+              </div>
+              <div className="p-4 bg-emerald-500/10 rounded-lg border border-emerald-500/20">
+                <div className="font-medium text-white mb-1">🎙️ AI Voice Assistant</div>
+                <div className="text-sm text-gray-400">Get spoken explanations for each answer</div>
+              </div>
+              <div className="p-4 bg-orange-500/10 rounded-lg border border-orange-500/20">
+                <div className="font-medium text-white mb-1">⏱️ Track Your Time</div>
+                <div className="text-sm text-gray-400">Build speed and confidence with timed practice</div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setShowDifficultySelection(true)}
+              className="w-full bg-white text-black py-4 rounded-lg font-bold hover:bg-gray-100 transition-all flex items-center justify-center gap-2"
+            >
+              <Play className="w-5 h-5" />
+              Start Practice Session
+            </button>
+          </div>
+        </div>
+      );
+    }
 
     // Difficulty Selection Screen
     if (!sessionStarted && showDifficultySelection) {
@@ -4267,6 +4048,15 @@ export default function QuantPrepApp() {
             </div>
 
             <div className="space-y-4 mb-6">
+              <div className="p-4 bg-purple-500/10 rounded-lg border border-purple-500/20">
+                <div className="flex items-center gap-3 mb-2">
+                  <Sparkles className="w-6 h-6 text-purple-400" />
+                  <div className="font-medium text-white">AI-Powered Answer Evaluation</div>
+                </div>
+                <div className="text-sm text-gray-400">
+                  Our intelligent system evaluates your free-text answers, understanding different phrasings and mathematical equivalents!
+                </div>
+              </div>
               <div className="p-4 bg-blue-500/10 rounded-lg border border-blue-500/20">
                 <div className="font-medium text-white mb-1">📝 10 Questions per Session</div>
                 <div className="text-sm text-gray-400">Randomly selected from your chosen difficulty</div>
@@ -4275,7 +4065,7 @@ export default function QuantPrepApp() {
                 <div className="font-medium text-white mb-1">🎙️ AI Voice Assistant</div>
                 <div className="text-sm text-gray-400">Get spoken explanations for each answer</div>
               </div>
-              <div className="p-4 bg-purple-500/10 rounded-lg border border-purple-500/20">
+              <div className="p-4 bg-orange-500/10 rounded-lg border border-orange-500/20">
                 <div className="font-medium text-white mb-1">⏱️ Track Your Time</div>
                 <div className="text-sm text-gray-400">Build speed and confidence with timed practice</div>
               </div>
@@ -4331,6 +4121,9 @@ export default function QuantPrepApp() {
                 <span className="px-3 py-1 rounded-full text-sm font-medium bg-white/5 text-gray-300 border border-white/10">
                   {getCategoryIcon(currentQuestion.category)} {currentQuestion.category}
                 </span>
+                <span className="px-3 py-1 rounded-full text-sm font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                  {currentQuestion.type === 'numerical' || currentQuestion.type === 'free_response' ? '🤖 AI Evaluated' : '✓ Multiple Choice'}
+                </span>
               </div>
               <h3 className="text-xl font-bold text-white mb-4 leading-relaxed">{currentQuestion.question}</h3>
             </div>
@@ -4354,20 +4147,33 @@ export default function QuantPrepApp() {
                     ))}
                   </div>
                 ) : (
-                  <input
-                    type="text"
-                    value={selectedAnswer}
-                    onChange={(e) => setSelectedAnswer(e.target.value)}
-                    placeholder="Enter your answer..."
-                    className="w-full p-4 bg-white/5 border-2 border-white/10 rounded-lg focus:border-white focus:outline-none text-white placeholder-gray-500"
-                  />
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-sm text-purple-400 mb-2">
+                      <Sparkles className="w-4 h-4" />
+                      <span>Your answer will be evaluated by AI</span>
+                    </div>
+                    <textarea
+                      value={selectedAnswer}
+                      onChange={(e) => setSelectedAnswer(e.target.value)}
+                      placeholder="Enter your answer here... (e.g., '50%' or '0.5' or 'half')"
+                      className="w-full p-4 bg-white/5 border-2 border-white/10 rounded-lg focus:border-white focus:outline-none text-white placeholder-gray-500 min-h-[100px] resize-y"
+                      rows={3}
+                    />
+                  </div>
                 )}
                 <button
                   onClick={submitAnswer}
-                  disabled={!selectedAnswer}
-                  className="w-full bg-white text-black py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors disabled:bg-white/10 disabled:text-gray-500 disabled:cursor-not-allowed"
+                  disabled={!selectedAnswer || isEvaluating}
+                  className="w-full bg-white text-black py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors disabled:bg-white/10 disabled:text-gray-500 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
-                  Submit Answer
+                  {isEvaluating ? (
+                    <>
+                      <Loader2 className="w-5h-5 animate-spin" />
+                      AI Evaluating Answer...
+                    </>
+                  ) : (
+                    <>Submit Answer</>
+                  )}
                 </button>
               </div>
             ) : (
@@ -4382,6 +4188,11 @@ export default function QuantPrepApp() {
                     <span className={`font-bold ${isCorrect ? 'text-emerald-400' : 'text-red-400'}`}>
                       {isCorrect ? 'Correct!' : 'Incorrect'}
                     </span>
+                    {aiEvaluation && (
+                      <span className="ml-auto text-sm text-gray-400">
+                        Confidence: {Math.round(aiEvaluation.confidence * 100)}%
+                      </span>
+                    )}
                   </div>
                   {!isCorrect && (
                     <div className="text-sm text-gray-300 mb-2">
@@ -4391,13 +4202,50 @@ export default function QuantPrepApp() {
                     </div>
                   )}
                 </div>
+
+                {aiEvaluation && (
+                  <div className="bg-purple-500/10 rounded-lg border border-purple-500/20 p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Sparkles className="w-5 h-5 text-purple-400" />
+                      <div className="font-bold text-white">AI Evaluation</div>
+                    </div>
+                    <div className="text-sm text-gray-300 mb-3">{aiEvaluation.feedback}</div>
+                    
+                    {aiEvaluation.keyPointsCovered && aiEvaluation.keyPointsCovered.length > 0 && (
+                      <div className="mb-3">
+                        <div className="text-xs font-medium text-emerald-400 mb-1">✓ Key Points You Covered:</div>
+                        <ul className="text-xs text-gray-400 space-y-1">
+                          {aiEvaluation.keyPointsCovered.map((point, idx) => (
+                            <li key={idx} className="flex items-start gap-2">
+                              <span className="text-emerald-400">•</span>
+                              <span>{point}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    
+                    {aiEvaluation.missingPoints && aiEvaluation.missingPoints.length > 0 && (
+                      <div>
+                        <div className="text-xs font-medium text-amber-400 mb-1">⚠ Missing Points:</div>
+                        <ul className="text-xs text-gray-400 space-y-1">
+                          {aiEvaluation.missingPoints.map((point, idx) => (
+                            <li key={idx} className="flex items-start gap-2">
+                              <span className="text-amber-400">•</span>
+                              <span>{point}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                )}
                 
                 <div className="p-4 bg-blue-500/10 rounded-lg border border-blue-500/20">
                   <div className="font-bold text-white mb-2">💡 Explanation</div>
                   <div className="text-gray-300">{currentQuestion.explanation}</div>
                 </div>
 
-                {/* AI Voice Assistant */}
                 <div className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-lg border border-purple-500/20 p-4">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center relative">
@@ -4455,7 +4303,6 @@ export default function QuantPrepApp() {
   const Topics = () => {
     const categories = [...new Set(QUESTIONS_DB.questions.map(q => q.category))];
     
-    // Custom button text mapping
     const getButtonText = (category) => {
       const buttonTextMap = {
         'Purely Quantitative & Logic': 'Practice Logical Reasoning',
