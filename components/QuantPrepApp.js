@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Brain, Flame, BarChart3, BookOpen, Target, Menu, X, Clock, TrendingUp, ChevronRight, Play, ArrowRight, Check, AlertCircle } from 'lucide-react';
+import { Brain, Flame, BarChart3, BookOpen, Target, Menu, X, Clock, TrendingUp, ChevronRight, Play, ArrowRight, Check, AlertCircle, Zap } from 'lucide-react';
 
 // REPLACE THIS ENTIRE SECTION WITH YOUR CONVERTED DATABASE
-// After running the conversion scripts, paste the QUESTIONS_DB here
+
 const QUESTIONS_DB = {
   "questions": [
     {
@@ -3896,6 +3896,7 @@ const QUESTIONS_DB = {
   ]
 };
 
+
 // Utility Functions
 const formatTime = (seconds) => {
   const mins = Math.floor(seconds / 60);
@@ -3905,25 +3906,25 @@ const formatTime = (seconds) => {
 
 const getDifficultyColor = (difficulty) => {
   switch(difficulty) {
-    case 'Easy': return 'bg-green-100 text-green-700';
-    case 'Medium': return 'bg-orange-100 text-orange-700';
-    case 'Hard': return 'bg-red-100 text-red-700';
-    default: return 'bg-gray-100 text-gray-700';
+    case 'Easy': return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+    case 'Medium': return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+    case 'Hard': return 'bg-red-500/10 text-red-400 border-red-500/20';
+    default: return 'bg-gray-500/10 text-gray-400 border-gray-500/20';
   }
 };
 
 const getCategoryIcon = (category) => {
   const iconMap = {
-    'Purely Quantitative & Logic': '🧮',
-    'Derivatives': '📈',
-    'Statistics': '📊',
-    'Other Financial Economics': '💼',
-    'Calculus & Linear Algebra': '∫',
+    'Purely Quantitative & Logic': '⚡',
+    'Derivatives': '📊',
+    'Statistics': '📈',
+    'Other Financial Economics': '💰',
+    'Calculus & Linear Algebra': '∑',
     'Stochastic Processes': '🎲',
-    'Programming & Algorithms': '💻',
-    'Non-Quantitative': '💬'
+    'Programming & Algorithms': '⚙️',
+    'Non-Quantitative': '💡'
   };
-  return iconMap[category] || '📚';
+  return iconMap[category] || '🔹';
 };
 
 export default function QuantPrepApp() {
@@ -3954,20 +3955,24 @@ export default function QuantPrepApp() {
   }, []);
 
   const Sidebar = () => (
-    <div className={`fixed left-0 top-0 h-full bg-white/80 backdrop-blur-sm border-r border-gray-200 transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-0'} overflow-hidden z-50`}>
+    <div className={`fixed left-0 top-0 h-full bg-black border-r border-white/10 transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-0'} overflow-hidden z-50`}>
       <div className="p-6">
         <div className="flex items-center gap-3 mb-2">
           <div className="relative">
-            <Brain className="w-8 h-8 text-blue-600" />
-            <Flame className="w-4 h-4 text-orange-500 absolute -top-1 -right-1" />
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-white to-gray-400 flex items-center justify-center">
+              <Brain className="w-6 h-6 text-black" />
+            </div>
+            <div className="absolute -top-1 -right-1 w-4 h-4 bg-white rounded-full flex items-center justify-center">
+              <Zap className="w-3 h-3 text-black" />
+            </div>
           </div>
           <div>
-            <h1 className="text-xl font-bold text-gray-900">QuantPrep</h1>
+            <h1 className="text-xl font-bold text-white">QuantPrep</h1>
             <p className="text-xs text-gray-500">Master Quant Interviews</p>
           </div>
         </div>
         
-        <nav className="mt-8 space-y-2">
+        <nav className="mt-8 space-y-1">
           {[
             { id: 'dashboard', icon: Target, label: 'Dashboard' },
             { id: 'practice', icon: Play, label: 'Practice' },
@@ -3977,10 +3982,10 @@ export default function QuantPrepApp() {
             <button
               key={item.id}
               onClick={() => setCurrentPage(item.id)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                 currentPage === item.id
-                  ? 'bg-blue-50 text-blue-600'
-                  : 'text-gray-600 hover:bg-gray-50'
+                  ? 'bg-white text-black shadow-lg shadow-white/20'
+                  : 'text-gray-400 hover:text-white hover:bg-white/5'
               }`}
             >
               <item.icon className="w-5 h-5" />
@@ -3989,13 +3994,13 @@ export default function QuantPrepApp() {
           ))}
         </nav>
 
-        <div className="mt-auto pt-8 border-t border-gray-200">
+        <div className="absolute bottom-6 left-6 right-6 pt-6 border-t border-white/10">
           <div className="flex items-center gap-3 px-4">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white to-gray-400 flex items-center justify-center text-black font-bold">
               Q
             </div>
             <div>
-              <p className="font-medium text-sm">Aspiring Quant</p>
+              <p className="font-medium text-sm text-white">Aspiring Quant</p>
               <p className="text-xs text-gray-500">Student</p>
             </div>
           </div>
@@ -4006,47 +4011,47 @@ export default function QuantPrepApp() {
 
   const Dashboard = () => {
     const stats = [
-      { label: 'Questions Solved', value: userProgress.totalSolved, icon: Target, color: 'from-blue-500 to-blue-600' },
-      { label: 'Accuracy Rate', value: `${userProgress.accuracy}%`, icon: TrendingUp, color: 'from-green-500 to-green-600' },
-      { label: 'Current Streak', value: `${userProgress.currentStreak} days`, icon: Flame, color: 'from-orange-500 to-orange-600' },
-      { label: 'Study Time', value: formatTime(userProgress.totalStudyTime), icon: Clock, color: 'from-purple-500 to-purple-600' }
+      { label: 'Questions Solved', value: userProgress.totalSolved, icon: Target, gradient: 'from-emerald-400 to-emerald-600' },
+      { label: 'Accuracy Rate', value: `${userProgress.accuracy}%`, icon: TrendingUp, gradient: 'from-blue-400 to-blue-600' },
+      { label: 'Current Streak', value: `${userProgress.currentStreak} days`, icon: Flame, gradient: 'from-orange-400 to-orange-600' },
+      { label: 'Study Time', value: formatTime(userProgress.totalStudyTime), icon: Clock, gradient: 'from-purple-400 to-purple-600' }
     ];
 
     return (
       <div className="space-y-6">
         <div>
-          <h2 className="text-3xl font-bold text-gray-900">Welcome back! 👋</h2>
-          <p className="text-gray-600 mt-1">Ready to master quant interviews?</p>
+          <h2 className="text-3xl font-bold text-white">Welcome back 👋</h2>
+          <p className="text-gray-400 mt-1">Ready to master quant interviews?</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {stats.map((stat, idx) => (
-            <div key={idx} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-              <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${stat.color} flex items-center justify-center mb-4`}>
+            <div key={idx} className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-white/20 transition-all group">
+              <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${stat.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                 <stat.icon className="w-6 h-6 text-white" />
               </div>
-              <div className="text-2xl font-bold text-gray-900">{stat.value}</div>
-              <div className="text-sm text-gray-500 mt-1">{stat.label}</div>
+              <div className="text-3xl font-bold text-white">{stat.value}</div>
+              <div className="text-sm text-gray-400 mt-1">{stat.label}</div>
             </div>
           ))}
         </div>
 
-        <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-xl p-6 border border-orange-200">
+        <div className="bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-xl p-6 border border-orange-500/20">
           <div className="flex items-center gap-4">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
-                <Flame className="w-6 h-6 text-orange-500" />
-                <h3 className="text-xl font-bold text-gray-900">Daily Streak</h3>
+                <Flame className="w-6 h-6 text-orange-400" />
+                <h3 className="text-xl font-bold text-white">Daily Streak</h3>
               </div>
-              <p className="text-gray-600">Keep the momentum going!</p>
+              <p className="text-gray-400">Keep the momentum going!</p>
               <div className="mt-4 flex items-center gap-4">
                 <div>
-                  <div className="text-3xl font-bold text-orange-600">{userProgress.currentStreak}</div>
+                  <div className="text-3xl font-bold text-orange-400">{userProgress.currentStreak}</div>
                   <div className="text-sm text-gray-500">Current</div>
                 </div>
-                <div className="h-12 w-px bg-gray-300" />
+                <div className="h-12 w-px bg-white/10" />
                 <div>
-                  <div className="text-3xl font-bold text-gray-900">{userProgress.longestStreak}</div>
+                  <div className="text-3xl font-bold text-white">{userProgress.longestStreak}</div>
                   <div className="text-sm text-gray-500">Longest</div>
                 </div>
               </div>
@@ -4055,23 +4060,23 @@ export default function QuantPrepApp() {
         </div>
 
         <div>
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Quick Practice</h3>
+          <h3 className="text-xl font-bold text-white mb-4">Quick Practice</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {['Easy', 'Medium', 'Hard'].map(difficulty => (
               <button
                 key={difficulty}
                 onClick={() => setCurrentPage('practice')}
-                className={`p-6 rounded-xl border-2 transition-all hover:shadow-md ${
-                  difficulty === 'Easy' ? 'border-green-200 bg-green-50 hover:border-green-300' :
-                  difficulty === 'Medium' ? 'border-orange-200 bg-orange-50 hover:border-orange-300' :
-                  'border-red-200 bg-red-50 hover:border-red-300'
+                className={`p-6 rounded-xl border-2 transition-all hover:scale-105 group ${
+                  difficulty === 'Easy' ? 'border-emerald-500/20 bg-emerald-500/5 hover:border-emerald-500/40 hover:bg-emerald-500/10' :
+                  difficulty === 'Medium' ? 'border-amber-500/20 bg-amber-500/5 hover:border-amber-500/40 hover:bg-amber-500/10' :
+                  'border-red-500/20 bg-red-500/5 hover:border-red-500/40 hover:bg-red-500/10'
                 }`}
               >
-                <div className="text-lg font-bold text-gray-900 mb-2">{difficulty} Questions</div>
-                <div className="text-sm text-gray-600 mb-4">
+                <div className="text-lg font-bold text-white mb-2">{difficulty} Questions</div>
+                <div className="text-sm text-gray-400 mb-4">
                   {QUESTIONS_DB.questions.filter(q => q.difficulty === difficulty).length} questions available
                 </div>
-                <div className="flex items-center justify-center gap-2 text-blue-600 font-medium">
+                <div className="flex items-center justify-center gap-2 text-white font-medium group-hover:gap-3 transition-all">
                   Start Practice <ArrowRight className="w-4 h-4" />
                 </div>
               </button>
@@ -4091,6 +4096,7 @@ export default function QuantPrepApp() {
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [score, setScore] = useState(0);
     const [timeSpent, setTimeSpent] = useState(0);
+    const [selectedDifficulty, setSelectedDifficulty] = useState(null);
 
     useEffect(() => {
       let interval;
@@ -4102,10 +4108,18 @@ export default function QuantPrepApp() {
       return () => clearInterval(interval);
     }, [sessionStarted, showFeedback]);
 
-    const startSession = () => {
-      const shuffled = [...QUESTIONS_DB.questions].sort(() => Math.random() - 0.5).slice(0, 10);
+    const startSession = (difficulty = null) => {
+      let questions = [...QUESTIONS_DB.questions];
+      
+      // Filter by difficulty if specified
+      if (difficulty) {
+        questions = questions.filter(q => q.difficulty === difficulty);
+      }
+      
+      const shuffled = questions.sort(() => Math.random() - 0.5).slice(0, 10);
       setSessionQuestions(shuffled);
       setSessionStarted(true);
+      setSelectedDifficulty(difficulty);
       setCurrentQuestionIndex(0);
       setScore(0);
       setTimeSpent(0);
@@ -4138,30 +4152,67 @@ export default function QuantPrepApp() {
 
     if (!sessionStarted) {
       return (
-        <div className="max-w-2xl mx-auto">
-          <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Start Practice Session</h2>
-            <div className="space-y-4 mb-6">
-              <div className="p-4 bg-blue-50 rounded-lg">
-                <div className="font-medium text-gray-900 mb-1">📝 10 Questions</div>
-                <div className="text-sm text-gray-600">Mixed difficulty and topics</div>
-              </div>
-              <div className="p-4 bg-green-50 rounded-lg">
-                <div className="font-medium text-gray-900 mb-1">⚡ Instant Feedback</div>
-                <div className="text-sm text-gray-600">Learn from detailed explanations</div>
-              </div>
-              <div className="p-4 bg-purple-50 rounded-lg">
-                <div className="font-medium text-gray-900 mb-1">⏱️ Track Your Time</div>
-                <div className="text-sm text-gray-600">Build speed and confidence</div>
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10">
+            <h2 className="text-2xl font-bold text-white mb-6">Start Practice Session</h2>
+            
+            {/* Difficulty Selection */}
+            <div className="mb-8">
+              <h3 className="text-lg font-semibold text-white mb-4">Choose Difficulty</h3>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <button
+                  onClick={() => startSession(null)}
+                  className="p-4 rounded-lg border-2 border-white/20 bg-white/5 hover:border-white/40 hover:bg-white/10 transition-all group"
+                >
+                  <div className="text-lg font-bold text-white mb-2">Mixed</div>
+                  <div className="text-sm text-gray-400 mb-2">
+                    All difficulties
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    {QUESTIONS_DB.questions.length} questions
+                  </div>
+                </button>
+                
+                {['Easy', 'Medium', 'Hard'].map(difficulty => {
+                  const count = QUESTIONS_DB.questions.filter(q => q.difficulty === difficulty).length;
+                  return (
+                    <button
+                      key={difficulty}
+                      onClick={() => startSession(difficulty)}
+                      className={`p-4 rounded-lg border-2 transition-all group ${
+                        difficulty === 'Easy' ? 'border-emerald-500/20 bg-emerald-500/5 hover:border-emerald-500/40 hover:bg-emerald-500/10' :
+                        difficulty === 'Medium' ? 'border-amber-500/20 bg-amber-500/5 hover:border-amber-500/40 hover:bg-amber-500/10' :
+                        'border-red-500/20 bg-red-500/5 hover:border-red-500/40 hover:bg-red-500/10'
+                      }`}
+                    >
+                      <div className="text-lg font-bold text-white mb-2">{difficulty}</div>
+                      <div className="text-sm text-gray-400 mb-2">
+                        {difficulty} questions only
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {count} questions
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
-            <button
-              onClick={startSession}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-lg font-bold hover:shadow-lg transition-all flex items-center justify-center gap-2"
-            >
-              <Play className="w-5 h-5" />
-              Start Practice Session
-            </button>
+
+            {/* Session Info */}
+            <div className="space-y-4">
+              <div className="p-4 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                <div className="font-medium text-white mb-1">📝 10 Questions per Session</div>
+                <div className="text-sm text-gray-400">Randomly selected from your chosen difficulty</div>
+              </div>
+              <div className="p-4 bg-emerald-500/10 rounded-lg border border-emerald-500/20">
+                <div className="font-medium text-white mb-1">⚡ Instant Feedback</div>
+                <div className="text-sm text-gray-400">Learn from detailed explanations after each question</div>
+              </div>
+              <div className="p-4 bg-purple-500/10 rounded-lg border border-purple-500/20">
+                <div className="font-medium text-white mb-1">⏱️ Track Your Time</div>
+                <div className="text-sm text-gray-400">Build speed and confidence with timed practice</div>
+              </div>
+            </div>
           </div>
         </div>
       );
@@ -4171,16 +4222,24 @@ export default function QuantPrepApp() {
 
     return (
       <div className="max-w-3xl mx-auto">
-        <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100">
+        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10">
+          {/* Header with session info */}
           <div className="flex items-center justify-between mb-6">
-            <div className="text-sm text-gray-500">
-              Question {currentQuestionIndex + 1} of {sessionQuestions.length}
+            <div className="flex items-center gap-3">
+              <div className="text-sm text-gray-400">
+                Question {currentQuestionIndex + 1} of {sessionQuestions.length}
+              </div>
+              {selectedDifficulty && (
+                <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getDifficultyColor(selectedDifficulty)}`}>
+                  {selectedDifficulty} Mode
+                </span>
+              )}
             </div>
             <div className="flex items-center gap-4">
-              <div className="text-sm font-medium text-gray-700">
+              <div className="text-sm font-medium text-white">
                 Score: {score}/{currentQuestionIndex + (showFeedback ? 1 : 0)}
               </div>
-              <div className="flex items-center gap-2 text-blue-600">
+              <div className="flex items-center gap-2 text-white bg-white/10 px-3 py-1 rounded-full">
                 <Clock className="w-4 h-4" />
                 <span className="font-mono">{formatTime(timeSpent)}</span>
               </div>
@@ -4189,14 +4248,14 @@ export default function QuantPrepApp() {
 
           <div className="mb-6">
             <div className="flex items-center gap-2 mb-4">
-              <span className={`px-3 py-1 rounded-full text-sm font-medium ${getDifficultyColor(currentQuestion.difficulty)}`}>
+              <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getDifficultyColor(currentQuestion.difficulty)}`}>
                 {currentQuestion.difficulty}
               </span>
-              <span className="px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-700">
+              <span className="px-3 py-1 rounded-full text-sm font-medium bg-white/5 text-gray-300 border border-white/10">
                 {getCategoryIcon(currentQuestion.category)} {currentQuestion.category}
               </span>
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-4">{currentQuestion.question}</h3>
+            <h3 className="text-xl font-bold text-white mb-4 leading-relaxed">{currentQuestion.question}</h3>
           </div>
 
           {!showFeedback ? (
@@ -4209,8 +4268,8 @@ export default function QuantPrepApp() {
                       onClick={() => setSelectedAnswer(option)}
                       className={`w-full p-4 text-left rounded-lg border-2 transition-all ${
                         selectedAnswer === option
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 hover:border-gray-300'
+                          ? 'border-white bg-white/10 text-white'
+                          : 'border-white/10 text-gray-300 hover:border-white/30 hover:bg-white/5'
                       }`}
                     >
                       {option}
@@ -4223,32 +4282,32 @@ export default function QuantPrepApp() {
                   value={selectedAnswer}
                   onChange={(e) => setSelectedAnswer(e.target.value)}
                   placeholder="Enter your answer..."
-                  className="w-full p-4 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none"
+                  className="w-full p-4 bg-white/5 border-2 border-white/10 rounded-lg focus:border-white focus:outline-none text-white placeholder-gray-500"
                 />
               )}
               <button
                 onClick={submitAnswer}
                 disabled={!selectedAnswer}
-                className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+                className="w-full bg-white text-black py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors disabled:bg-white/10 disabled:text-gray-500 disabled:cursor-not-allowed"
               >
                 Submit Answer
               </button>
             </div>
           ) : (
             <div className="space-y-4">
-              <div className={`p-4 rounded-lg ${isCorrect ? 'bg-green-50 border-2 border-green-200' : 'bg-red-50 border-2 border-red-200'}`}>
+              <div className={`p-4 rounded-lg border-2 ${isCorrect ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-red-500/10 border-red-500/30'}`}>
                 <div className="flex items-center gap-2 mb-2">
                   {isCorrect ? (
-                    <Check className="w-5 h-5 text-green-600" />
+                    <Check className="w-5 h-5 text-emerald-400" />
                   ) : (
-                    <AlertCircle className="w-5 h-5 text-red-600" />
+                    <AlertCircle className="w-5 h-5 text-red-400" />
                   )}
-                  <span className={`font-bold ${isCorrect ? 'text-green-900' : 'text-red-900'}`}>
+                  <span className={`font-bold ${isCorrect ? 'text-emerald-400' : 'text-red-400'}`}>
                     {isCorrect ? 'Correct!' : 'Incorrect'}
                   </span>
                 </div>
                 {!isCorrect && (
-                  <div className="text-sm text-gray-700 mb-2">
+                  <div className="text-sm text-gray-300 mb-2">
                     <strong>Your answer:</strong> {selectedAnswer}
                     <br />
                     <strong>Correct answer:</strong> {currentQuestion.correct_answer}
@@ -4256,14 +4315,14 @@ export default function QuantPrepApp() {
                 )}
               </div>
               
-              <div className="p-4 bg-blue-50 rounded-lg">
-                <div className="font-bold text-gray-900 mb-2">💡 Explanation</div>
-                <div className="text-gray-700">{currentQuestion.explanation}</div>
+              <div className="p-4 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                <div className="font-bold text-white mb-2">💡 Explanation</div>
+                <div className="text-gray-300">{currentQuestion.explanation}</div>
               </div>
 
               <button
                 onClick={nextQuestion}
-                className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                className="w-full bg-white text-black py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
               >
                 {currentQuestionIndex < sessionQuestions.length - 1 ? (
                   <>Next Question <ChevronRight className="w-5 h-5" /></>
@@ -4281,9 +4340,25 @@ export default function QuantPrepApp() {
   const Topics = () => {
     const categories = [...new Set(QUESTIONS_DB.questions.map(q => q.category))];
     
+    // Custom button text mapping
+    const getButtonText = (category) => {
+      const buttonTextMap = {
+        'Purely Quantitative & Logic': 'Practice Logical Reasoning',
+        'Other Financial Economics': 'Practice Financial Economics',
+        'Stochastic Processes': 'Practice Stochastic Processes',
+        'Calculus & Linear Algebra': 'Practice Calculus and Linear Algebra',
+        'Derivatives': 'Practice Derivatives',
+        'Statistics': 'Practice Statistics',
+        'Programming & Algorithms': 'Practice Programming & Algorithms',
+        'Non-Quantitative': 'Practice Non-Quantitative'
+      };
+      
+      return buttonTextMap[category] || `Practice ${category}`;
+    };
+    
     return (
       <div>
-        <h2 className="text-3xl font-bold text-gray-900 mb-6">Topics</h2>
+        <h2 className="text-3xl font-bold text-white mb-6">Topics</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map(category => {
             const categoryQuestions = QUESTIONS_DB.questions.filter(q => q.category === category);
@@ -4291,31 +4366,31 @@ export default function QuantPrepApp() {
             const masteryPct = Math.round((progress.solved / progress.total) * 100);
             
             return (
-              <div key={category} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+              <div key={category} className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-white/20 transition-all group">
                 <div className="text-3xl mb-3">{getCategoryIcon(category)}</div>
-                <h3 className="font-bold text-gray-900 mb-2">{category}</h3>
-                <div className="text-sm text-gray-600 mb-4">
+                <h3 className="font-bold text-white mb-2">{category}</h3>
+                <div className="text-sm text-gray-400 mb-4">
                   {progress.solved} / {progress.total} questions solved
                 </div>
                 
                 <div className="mb-4">
                   <div className="flex items-center justify-between text-sm mb-2">
-                    <span className="text-gray-600">Mastery</span>
-                    <span className="font-bold text-gray-900">{masteryPct}%</span>
+                    <span className="text-gray-400">Mastery</span>
+                    <span className="font-bold text-white">{masteryPct}%</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-white/10 rounded-full h-2">
                     <div 
-                      className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all"
+                      className="bg-gradient-to-r from-white to-gray-400 h-2 rounded-full transition-all"
                       style={{ width: `${masteryPct}%` }}
                     />
                   </div>
                 </div>
 
-                <div className="flex gap-2 mb-4">
+                <div className="flex gap-2 mb-4 flex-wrap">
                   {['Easy', 'Medium', 'Hard'].map(diff => {
                     const count = categoryQuestions.filter(q => q.difficulty === diff).length;
                     return (
-                      <span key={diff} className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(diff)}`}>
+                      <span key={diff} className={`px-2 py-1 rounded text-xs font-medium border ${getDifficultyColor(diff)}`}>
                         {count} {diff}
                       </span>
                     );
@@ -4324,9 +4399,9 @@ export default function QuantPrepApp() {
 
                 <button
                   onClick={() => setCurrentPage('practice')}
-                  className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                  className="w-full bg-white text-black py-2 rounded-lg font-medium hover:bg-gray-100 transition-all group-hover:scale-105"
                 >
-                  Practice {category}
+                  {getButtonText(category)}
                 </button>
               </div>
             );
@@ -4339,31 +4414,31 @@ export default function QuantPrepApp() {
   const Analytics = () => {
     return (
       <div>
-        <h2 className="text-3xl font-bold text-gray-900 mb-6">Analytics</h2>
+        <h2 className="text-3xl font-bold text-white mb-6">Analytics</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <h3 className="font-bold text-gray-900 mb-4">Performance Overview</h3>
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
+            <h3 className="font-bold text-white mb-4">Performance Overview</h3>
             <div className="space-y-4">
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-gray-600">Overall Accuracy</span>
-                  <span className="font-bold text-gray-900">{userProgress.accuracy}%</span>
+                  <span className="text-sm text-gray-400">Overall Accuracy</span>
+                  <span className="font-bold text-white">{userProgress.accuracy}%</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="w-full bg-white/10 rounded-full h-2">
                   <div 
-                    className="bg-green-500 h-2 rounded-full"
+                    className="bg-gradient-to-r from-emerald-400 to-emerald-600 h-2 rounded-full"
                     style={{ width: `${userProgress.accuracy}%` }}
                   />
                 </div>
               </div>
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-gray-600">Questions Completed</span>
-                  <span className="font-bold text-gray-900">{userProgress.totalSolved} / {QUESTIONS_DB.questions.length}</span>
+                  <span className="text-sm text-gray-400">Questions Completed</span>
+                  <span className="font-bold text-white">{userProgress.totalSolved} / {QUESTIONS_DB.questions.length}</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="w-full bg-white/10 rounded-full h-2">
                   <div 
-                    className="bg-blue-500 h-2 rounded-full"
+                    className="bg-gradient-to-r from-blue-400 to-blue-600 h-2 rounded-full"
                     style={{ width: `${(userProgress.totalSolved / QUESTIONS_DB.questions.length) * 100}%` }}
                   />
                 </div>
@@ -4371,34 +4446,34 @@ export default function QuantPrepApp() {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <h3 className="font-bold text-gray-900 mb-4">Study Streaks</h3>
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
+            <h3 className="font-bold text-white mb-4">Study Streaks</h3>
             <div className="flex gap-8">
               <div>
-                <div className="text-4xl font-bold text-orange-600">{userProgress.currentStreak}</div>
-                <div className="text-sm text-gray-600">Current Streak</div>
+                <div className="text-4xl font-bold text-orange-400">{userProgress.currentStreak}</div>
+                <div className="text-sm text-gray-400">Current Streak</div>
               </div>
               <div>
-                <div className="text-4xl font-bold text-gray-900">{userProgress.longestStreak}</div>
-                <div className="text-sm text-gray-600">Longest Streak</div>
+                <div className="text-4xl font-bold text-white">{userProgress.longestStreak}</div>
+                <div className="text-sm text-gray-400">Longest Streak</div>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 md:col-span-2">
-            <h3 className="font-bold text-gray-900 mb-4">Category Breakdown</h3>
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 md:col-span-2">
+            <h3 className="font-bold text-white mb-4">Category Breakdown</h3>
             <div className="space-y-3">
               {Object.entries(userProgress.categoryProgress).map(([category, data]) => {
                 const pct = Math.round((data.solved / data.total) * 100);
                 return (
                   <div key={category}>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-gray-700">{getCategoryIcon(category)} {category}</span>
-                      <span className="text-sm font-medium text-gray-900">{data.solved}/{data.total} ({pct}%)</span>
+                      <span className="text-sm text-gray-300">{getCategoryIcon(category)} {category}</span>
+                      <span className="text-sm font-medium text-white">{data.solved}/{data.total} ({pct}%)</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-white/10 rounded-full h-2">
                       <div 
-                        className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full"
+                        className="bg-gradient-to-r from-white to-gray-400 h-2 rounded-full"
                         style={{ width: `${pct}%` }}
                       />
                     </div>
@@ -4413,20 +4488,20 @@ export default function QuantPrepApp() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen bg-black">
       <Sidebar />
       
       <div className={`transition-all duration-300 ${sidebarOpen ? 'ml-64' : 'ml-0'}`}>
-        <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40">
+        <header className="bg-black/80 backdrop-blur-sm border-b border-white/10 sticky top-0 z-40">
           <div className="px-6 py-4 flex items-center justify-between">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-white/10 rounded-lg transition-colors text-white"
             >
               {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 text-orange-600">
+              <div className="flex items-center gap-2 text-orange-400 bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/20">
                 <Flame className="w-5 h-5" />
                 <span className="font-bold">{userProgress.currentStreak} day streak</span>
               </div>
